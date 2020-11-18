@@ -1,6 +1,7 @@
 import axios from "axios";
+import serverIP from "../config"
 
-const API_URL = "http://localhost:8080/login";
+const API_URL = serverIP + "login";
 
 export const handleLogin = ({ login, password }) => {
   return axios.post(API_URL, {
@@ -10,5 +11,13 @@ export const handleLogin = ({ login, password }) => {
 };
 
 export const logout = () => {
+  localStorage.removeItem("token");
+};
+
+const saveToken = (token) => {
+  localStorage.setItem("token", token);
+};
+
+const handleRemove = () => {
   localStorage.removeItem("token");
 };

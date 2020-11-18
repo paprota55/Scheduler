@@ -1,5 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
+import LoginPage from "./components/login/LoginPage";
+import RegisterPage from "./components/register/RegisterPage";
+import CalendarPage from "./components/calendar/CalendarPage";
 
 import {
   Route,
@@ -13,10 +16,10 @@ function PrivateRoute({ component: Component, role, ...rest }) {
     <Route
       {...rest}
       render={() =>
-        localStorage.getItem("currentUser") === role ? (
-          <Component {...rest} />
-        ) : (
+        localStorage.getItem("token") === null ? (
           <Redirect to="/login" />
+        ) : (
+          <Component {...rest} />
         )
       }
     />
@@ -26,20 +29,14 @@ function PrivateRoute({ component: Component, role, ...rest }) {
 function App() {
   return (
 
-    <div>
-      {
-        console.log("obecny")
-      }
-    </div>
-
-  //   <Router basename="/">
-  //   <Switch>
-  //     <Route exact path="/login" component={LoginPage} />
-  //     <Route exact path="/register" component={RegisterPage} />
-  //     <PrivateRoute path="/userPage" role="EMPLOYEE" component={UserPage} />
-  //     <Route exact path="*" component={LoginPage} />
-  //   </Switch>
-  // </Router>
+    <Router basename="/">
+    <Switch>
+      <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/register" component={RegisterPage} />
+      <PrivateRoute path="/calendar" component={CalendarPage} />
+      <Route exact path="*" component={LoginPage} />
+    </Switch>
+  </Router>
 
   );
 }

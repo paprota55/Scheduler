@@ -1,8 +1,8 @@
-import bgr from "../resources/schedule-bw.png";
+import bgr from "../resources/schedule-bw.jpg";
 const { default: styled } = require("styled-components");
 
 const onHover = `
-background-color: #e2f3f5;
+background-color: #ccccff;
 color: black;`;
 
 export const Container = styled.div`
@@ -46,7 +46,7 @@ export const Input = styled.input`
   font-size: 1.5rem;
   border: none;
   padding: 8px;
-  background-color: #f3f169;
+  background-color: "#FFFFFF";
   color: black;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   ${(props) => (props.padding ? `padding: ${props.padding};` : ``)}
