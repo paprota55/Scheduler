@@ -1,6 +1,7 @@
 package pl.rafalpaprota.schedulerserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.rafalpaprota.schedulerserver.dto.LogRegUserDTO;
@@ -35,6 +36,10 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setRole(this.roleRepository.findByName("USER"));
         return this.userRepository.save(user);
+    }
+
+    public User getCurrentUser() {
+        return this.userRepository.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     public void deleteUserByLogin(final String login) {

@@ -7,5 +7,4 @@ public class LogRegUserDTO {
     private String login;
     private String email;
     private String password;
-    private String confirmPassword;
 }

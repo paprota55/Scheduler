@@ -25,7 +25,4 @@ public class User {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Role role;
-
-    @OneToOne(mappedBy = "user")
-    private Settings settings;
 }

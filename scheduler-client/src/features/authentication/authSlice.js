@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { handleLogin } from "../../services/LoginService";
+import serverIP from "../../config"
+
+const API_URL = serverIP + "login";
 
 const initialState = {
   success: false,
   failed: false,
   redirectTo: "",
   shouldRedirect: false,
+  errorMessage: "",
 };
 
 export const authSlice = createSlice({
@@ -20,27 +23,50 @@ export const authSlice = createSlice({
     allowRedirect: (state, action) => {
       state.shouldRedirect = action.payload;
     },
+    setFailed: (state, action) => {
+      state.failed = action.payload;
+    },
+    setErrorMessage: (state, action) => {
+      state.errorMessage = action.payload;
+    },
   },
 });
 
-export const { setRedirectAddress, allowRedirect } = authSlice.actions;
+export const {
+  setRedirectAddress,
+  allowRedirect,
+  setFailed,
+  setErrorMessage,
+} = authSlice.actions;
 
-export const selectLoggedInStatus = (state) => state.auth.loggedStatus;
-
-export const selectRedirectAddress = (state) => state.auth.redirectTo;
-
-export const selectShouldRedirect = (state) => state.auth.shouldRedirect;
+export const selectAll = (state) => state.auth;
 
 export const login = ({ login, password }) => {
   return async (dispatch) => {
     try {
-      const response = await handleLogin({ login, password });
+      const response = await axios.post(API_URL, {
+        login: login,
+        password: password,
+      });
       const { token, role } = response.data;
       localStorage.setItem("token", token);
       dispatch(setRedirectAddress("/calendar"));
       dispatch(allowRedirect(true));
+      dispatch(setFailed(false));
+      dispatch(setErrorMessage(""));
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        if (error.response.status === 403) {
+          dispatch(setFailed(true));
+          dispatch(setErrorMessage("Login lub hasło jest nieprawidłowe."));
+        } else {
+          dispatch(setFailed(true));
+          dispatch(setErrorMessage("Nie można zalogować."));
+        }
+      } else {
+        dispatch(setFailed(true));
+        dispatch(setErrorMessage("Nie można połączyć z serwerem."));
+      }
     }
   };
 };

@@ -1,7 +1,59 @@
 package pl.rafalpaprota.schedulerserver.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import pl.rafalpaprota.schedulerserver.dto.BlockDTO;
+import pl.rafalpaprota.schedulerserver.model.User;
+import pl.rafalpaprota.schedulerserver.services.BlockService;
+import pl.rafalpaprota.schedulerserver.services.UserService;
 
 @RestController
 public class BlocksController {
+
+    private final BlockService blockService;
+    private final UserService userService;
+
+    @Autowired
+    public BlocksController(BlockService blockService, UserService userService) {
+        this.blockService = blockService;
+        this.userService = userService;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "api/blocks/addBlock")
+    public ResponseEntity<?> addBlock(@RequestBody BlockDTO blockDTO) {
+        User user = this.userService.getCurrentUser();
+        if (!this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
+            this.blockService.addBlockToDB(blockDTO, user);
+            return ResponseEntity.ok("Blok został dodany.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Blok o podanej nazwie już istnieje.");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "api/blocks/deleteBlock")
+    public ResponseEntity<?> deleteBlock(@RequestBody BlockDTO blockDTO) {
+
+        User user = this.userService.getCurrentUser();
+        if (this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
+            this.blockService.deleteBlockFromDB(blockDTO.getBlockName(), user);
+            return ResponseEntity.ok("Blok został usunięty.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Nie posiadasz bloku o takiej nazwie.");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "api/blocks/getBlocks")
+    public ResponseEntity<?> getMyBlocks() {
+        return ResponseEntity.ok(this.blockService.getCurrentUserBlocks());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "admin/blocks/getAllBlocks")
+    public ResponseEntity<?> getAllBlocks() {
+        return ResponseEntity.ok(this.blockService.getAllBlocks());
+    }
 }
