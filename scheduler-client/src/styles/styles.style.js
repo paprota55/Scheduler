@@ -56,6 +56,7 @@ export const Input = styled.input`
 export const Button = styled.button`
   font-size: 1.3rem;
   border: 3px;
+  display: block;
   padding: 8px;
   transition: all 1.04s;
   ${(props) => (props.width ? `width: ${props.width};` : ``)}

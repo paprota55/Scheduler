@@ -1,5 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 import LoginPage from "./components/login/LoginPage";
 import RegisterPage from "./components/register/RegisterPage";
 import CalendarPage from "./components/calendar/CalendarPage";
@@ -11,7 +11,7 @@ import {
   Redirect,
 } from "react-router-dom";
 
-function PrivateRoute({ component: Component, role, ...rest }) {
+function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
       {...rest}
@@ -24,20 +24,18 @@ function PrivateRoute({ component: Component, role, ...rest }) {
       }
     />
   );
-  }
-  
+}
+
 function App() {
   return (
-
     <Router basename="/">
-    <Switch>
-      <Route exact path="/login" component={LoginPage} />
-      <Route exact path="/register" component={RegisterPage} />
-      <PrivateRoute path="/calendar" component={CalendarPage} />
-      <Route exact path="*" component={LoginPage} />
-    </Switch>
-  </Router>
-
+      <Switch>
+        <Route exact path="/register" component={RegisterPage} />
+        <Route exact path="/login" component={LoginPage} />
+        <PrivateRoute path="/calendar" component={CalendarPage} />
+        <Route exact path="*" component={LoginPage} />
+      </Switch>
+    </Router>
   );
 }
 
