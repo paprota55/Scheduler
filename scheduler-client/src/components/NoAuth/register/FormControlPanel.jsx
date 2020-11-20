@@ -1,10 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectAll } from "../../features/register/registerSlice";
+import { selectAll } from "../../../features/register/registerSlice";
 import Alert from "@material-ui/lab/Alert";
 import useStyles from "./useStyles";
 import { Grid, Button } from "@material-ui/core";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const FormControlPanel = ({ showSuccess }) => {
   const classes = useStyles();
@@ -41,7 +40,7 @@ const FormControlPanel = ({ showSuccess }) => {
             <Button
               variant="contained"
               type="submit"
-              startIcon={<ExitToAppIcon />}
+              width="100%"
             >
               Utwórz konto
             </Button>
@@ -60,9 +59,8 @@ const FormControlPanel = ({ showSuccess }) => {
               type="button"
               width="100%"
               href="/login"
-              startIcon={<ExitToAppIcon />}
             >
-              Zaloguj się
+              Zaloguj
             </Button>
           </a>
         </Grid>

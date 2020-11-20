@@ -19,7 +19,6 @@ export const authSlice = createSlice({
     setRedirectAddress: (state, action) => {
       state.redirectTo = action.payload;
     },
-
     allowRedirect: (state, action) => {
       state.shouldRedirect = action.payload;
     },
@@ -50,7 +49,7 @@ export const login = ({ login, password }) => {
       });
       const { token, role } = response.data;
       localStorage.setItem("token", token);
-      dispatch(setRedirectAddress("/calendar"));
+      dispatch(setRedirectAddress("/instructionPage"));
       dispatch(allowRedirect(true));
       dispatch(setFailed(false));
       dispatch(setErrorMessage(""));

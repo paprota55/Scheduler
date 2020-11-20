@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
     backgroundColor: "white",
     borderRadius: "20px",
-    minHeight: "60vh",
+    minHeight: "200px",
   },
   content: {
     marginTop: "8%",
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10%",
   },
   title: {
-    fontSize: "10%",
-    color: "white",
+    fontSize: "100%",
+    color: "black",
   },
 }));
 
