@@ -9,10 +9,12 @@ import pl.rafalpaprota.schedulerserver.repositories.SettingsRepository;
 @Service
 public class SettingsService {
     private final SettingsRepository settingsRepository;
+    private final UserService userService;
 
     @Autowired
-    public SettingsService(SettingsRepository settingsRepository) {
+    public SettingsService(SettingsRepository settingsRepository, UserService userService) {
         this.settingsRepository = settingsRepository;
+        this.userService = userService;
     }
 
     public Settings createNewSettings(User user) {
@@ -20,5 +22,12 @@ public class SettingsService {
         settings.setTimeToArchive(14);
         settings.setUser(user);
         return this.settingsRepository.save(settings);
+    }
+
+    public Long changeArchiveTime(Integer days){
+        User user = userService.getCurrentUser();
+        Settings settings = settingsRepository.findByUser(user);
+        settings.setTimeToArchive(days);
+        return settingsRepository.save(settings).getId();
     }
 }
