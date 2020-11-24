@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
       buttonStyle: {
         alignSelf: "center",
       },
+      buttonContainer: {
+        alignSelf: "stretch",
+      },
 }));
 
 export default useStyles;

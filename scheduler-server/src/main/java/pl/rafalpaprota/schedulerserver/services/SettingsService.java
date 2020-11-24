@@ -23,7 +23,7 @@ public class SettingsService {
 
     public Settings createNewSettings(User user) {
         Settings settings = new Settings();
-        settings.setTimeToArchive(this.defaultTime);
+        settings.setTimeToArchive(14);
         settings.setUser(user);
         return this.settingsRepository.save(settings);
     }

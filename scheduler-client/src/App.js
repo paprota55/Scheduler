@@ -1,8 +1,7 @@
-import logo from "./logo.svg";
 import "./App.css";
-import LoginPage from "./components/login/LoginPage";
-import RegisterPage from "./components/register/RegisterPage";
-import CalendarPage from "./components/calendar/CalendarPage";
+import LoginPage from "./components/NoAuth/login/LoginPage";
+import RegisterPage from "./components/NoAuth/register/RegisterPage";
+import InstructionPage from "./components/Auth/instruction/InstructionPage";
 
 import {
   Route,
@@ -32,7 +31,7 @@ function App() {
       <Switch>
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/login" component={LoginPage} />
-        <PrivateRoute path="/calendar" component={CalendarPage} />
+        <PrivateRoute path="/instructionPage" component={InstructionPage} />
         <Route exact path="*" component={LoginPage} />
       </Switch>
     </Router>

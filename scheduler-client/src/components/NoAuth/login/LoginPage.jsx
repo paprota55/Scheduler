@@ -3,7 +3,7 @@ import {
   Container,
   ShadowContainer,
   ImageContainer,
-} from "../../styles/styles.style";
+} from "../../../styles/styles.style";
 import Login from "./Login";
 
 const LoginPage = () => {

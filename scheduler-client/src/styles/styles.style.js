@@ -56,10 +56,11 @@ export const Input = styled.input`
 export const Button = styled.button`
   font-size: 1.3rem;
   border: 3px;
-  display: block;
   padding: 8px;
   transition: all 1.04s;
-  ${(props) => (props.width ? `width: ${props.width};` : ``)}
+  width: 100%;
+  display: block;
+  alignSelf: stretch;
   ${(props) => (props.padding ? `padding: ${props.padding};` : ``)}
   ${(props) => (props.round ? `border-radius: 20px;` : ``)}
   ${(props) => (props.text ? `color: ${props.text};` : `color: black;`)}
@@ -71,3 +72,5 @@ export const Button = styled.button`
       ${onHover}
     }  
 `;
+
+// ${(props) => (props.width ? `width: ${props.width};` : ``)}

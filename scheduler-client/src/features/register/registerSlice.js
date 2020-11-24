@@ -51,9 +51,6 @@ export const registerSlice = createSlice({
       state.login = "";
       state.password = "";
       state.rePassword = "";
-      state.didSubmit = false;
-      state.success = false;
-      state.response = false;
     },
   },
 });
@@ -75,7 +72,8 @@ export const register = (user) => async (dispatch) => {
   try {
     await axios.post(API_URL, user, {
     });
-    dispatch(toggleSuccess(true));  
+    dispatch(toggleSuccess(true)); 
+    dispatch(reset()); 
   } catch (error) {
     if (error.response) {
       if (error.response.status === 409) 

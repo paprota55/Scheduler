@@ -9,7 +9,7 @@ import {
   Container,
   ShadowContainer,
   ImageContainer,
-} from "../../styles/styles.style";
+} from "../../../styles/styles.style";
 import {
   emailChange,
   loginChange,
@@ -20,7 +20,7 @@ import {
   reset,
   register,
   toggleSuccess,
-} from "../../features/register/registerSlice";
+} from "../../../features/register/registerSlice";
 import useStyles from "./useStyles";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import FormControlPanel from "./FormControlPanel";
@@ -33,10 +33,6 @@ const RegisterPage = () => {
   const [showSuccess, toggleShowSuccess] = useState(false);
   const user = useSelector(selectAll);
   const { email, login, password, rePassword } = user;
-
-  function resetForm() {
-    dispatch(reset());
-  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -72,7 +68,6 @@ const RegisterPage = () => {
       dispatch(register(user));
       toggleSubmit(true);
       toggleShowSuccess(true);
-      resetForm();
     } else {
       toggleSubmit(true);
       toggleShowSuccess(false);
@@ -95,7 +90,7 @@ const RegisterPage = () => {
               >
                 <Paper elevation={6} className={classes.paper}>
                   <Grid className={classes.content}>
-                    <Typography variant="h2">Utwórz konto</Typography>
+                  <Typography className = {classes.title}>Rejestracja</Typography>
                     <UsersLogin
                       email={email}
                       login={login}

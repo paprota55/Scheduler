@@ -1,20 +1,18 @@
 import React, { useState } from "react";
-import { Container } from "../../styles/styles.style";
+import { Container } from "../../../styles/styles.style";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Grid,
   InputAdornment,
   Paper,
   Button,
-  makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { login, selectAll } from "../../features/authentication/authSlice";
+import { login, selectAll } from "../../../features/authentication/authSlice";
 import { Redirect } from "react-router-dom";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import useStyles from "./useStyles";
 
 const Login = () => {
@@ -39,7 +37,7 @@ const Login = () => {
     return (
       <form onSubmit={handlesubmit}>
         <Grid>
-          <Container width="40vw" height="40vh" bgr="white" col round>
+          <Container width="40vw" height="60vh" bgr="white" col round>
             <Typography className={classes.title}>Zaloguj się</Typography>
             <Paper className={classes.paper}>
               <TextField
@@ -83,11 +81,10 @@ const Login = () => {
             </Paper>
             <Grid container spacing={2} direction="column" justify = "center" alignItems = "center">
               <Grid item xs={6} style={{ textAlign: "center" }}>
-                <a>
+                <a className={classes.buttonContainer}>
                   <Button
                     variant="contained"
                     type="submit"
-                    startIcon={<ExitToAppIcon />}
                     className={classes.buttonStyle}
                   >
                     Zaloguj
@@ -106,10 +103,9 @@ const Login = () => {
                     variant="contained"
                     type="button"
                     href="/register"
-                    startIcon={<ExitToAppIcon />}
                     className={classes.buttonStyle}
                   >
-                    Zarejestruj się
+                    Zarejestruj
                   </Button>
                 </a>
               </Grid>
