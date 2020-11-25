@@ -10,6 +10,8 @@ import pl.rafalpaprota.schedulerserver.repositories.RoleRepository;
 import pl.rafalpaprota.schedulerserver.repositories.UserRepository;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -36,6 +38,35 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setRole(this.roleRepository.findByName("USER"));
         return this.userRepository.save(user);
+    }
+
+    public void changeEmail(final User user, final String email) {
+        user.setEmail(email);
+        this.userRepository.save(user);
+    }
+
+    public boolean checkEmail(final String email) {
+        final String regex = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public boolean changePassword(final User user, final String password) {
+        final String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_.@#$%^&+=])(?=\\S+$).{8,}";
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(password);
+        System.out.println(matcher.matches());
+        System.out.println(password);
+        if (matcher.matches()) {
+            user.setPassword(this.passwordEncoder.encode(password));
+            this.userRepository.save(user);
+        }
+        return matcher.matches();
+    }
+
+    public boolean checkPassword(final String given, final String actual) {
+        return this.passwordEncoder.matches(given, actual);
     }
 
     public User getCurrentUser() {

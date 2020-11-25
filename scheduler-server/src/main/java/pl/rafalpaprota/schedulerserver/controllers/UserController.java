@@ -1,18 +1,14 @@
 package pl.rafalpaprota.schedulerserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.rafalpaprota.schedulerserver.dto.EditAccountDTO;
 import pl.rafalpaprota.schedulerserver.dto.LogRegUserDTO;
 import pl.rafalpaprota.schedulerserver.model.User;
-import pl.rafalpaprota.schedulerserver.services.SettingsService;
 import pl.rafalpaprota.schedulerserver.services.UserService;
-import pl.rafalpaprota.schedulerserver.util.JwtUtil;
 
 @RestController
 @CrossOrigin
@@ -21,21 +17,12 @@ public class UserController {
 
     private final UserService userService;
 
-    private final SettingsService settingsService;
-
-    private final JwtUtil jwtUtil;
-
-    private final AuthenticationManager authenticationManager;
-
     @Autowired
-    public UserController(UserService userService, SettingsService settingsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.settingsService = settingsService;
-        this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "api/myAccount")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/myAccount")
     public ResponseEntity<?> getMyAccount() {
         User user = this.userService.getUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
         LogRegUserDTO userDTO = new LogRegUserDTO();
@@ -43,4 +30,34 @@ public class UserController {
         userDTO.setEmail(user.getEmail());
         return ResponseEntity.ok(userDTO);
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/modify/password")
+    public ResponseEntity<?> updatePassword(@RequestBody final EditAccountDTO editAccountDTO) {
+        final User user = this.userService.getCurrentUser();
+        if (this.userService.checkPassword(editAccountDTO.getPassword(), user.getPassword())) {
+            if (this.userService.changePassword(user, editAccountDTO.getNewPassword())) {
+                return ResponseEntity.status(HttpStatus.OK).body("Hasło zostało zmienione.");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Hasło nie zostało zmienione.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Podane hasło jest nieprawidłowe.");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/modify/email")
+    ResponseEntity<?> updateEmail(@RequestBody final EditAccountDTO editAccountDTO) {
+        final User user = this.userService.getCurrentUser();
+        if (this.userService.checkPassword(editAccountDTO.getPassword(), user.getPassword())) {
+            if (this.userService.checkEmail(editAccountDTO.getNewEmail())) {
+                this.userService.changeEmail(user, editAccountDTO.getNewEmail());
+                return ResponseEntity.status(HttpStatus.OK).body("Email został zmieniony.");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Wystąpił problem podczas zmiany adresu email.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Podane hasło jest nieprawidłowe.");
+        }
+    }
 }
+    
