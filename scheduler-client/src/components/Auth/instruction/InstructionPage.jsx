@@ -1,8 +1,7 @@
-import UserNavbar from "../navbar/UserNavbar"
 
 const InstructionPage = () => {
     return (
-      <UserNavbar/>
+      <h1>Instrukcja</h1>
     );
   }
   

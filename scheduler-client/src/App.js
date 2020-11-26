@@ -1,14 +1,14 @@
 import "./App.css";
 import LoginPage from "./components/NoAuth/login/LoginPage";
 import RegisterPage from "./components/NoAuth/register/RegisterPage";
-import InstructionPage from "./components/Auth/instruction/InstructionPage";
-
+import UserPage from "./components/Auth/UserPage";
 import {
   Route,
   Switch,
   BrowserRouter as Router,
   Redirect,
 } from "react-router-dom";
+
 
 function PrivateRoute({ component: Component, ...rest }) {
   return (
@@ -31,7 +31,7 @@ function App() {
       <Switch>
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/login" component={LoginPage} />
-        <PrivateRoute path="/instructionPage" component={InstructionPage} />
+        <PrivateRoute path="/userPage" component={UserPage} />
         <Route exact path="*" component={LoginPage} />
       </Switch>
     </Router>

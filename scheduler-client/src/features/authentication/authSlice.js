@@ -49,7 +49,7 @@ export const login = ({ login, password }) => {
       });
       const { token, role } = response.data;
       localStorage.setItem("token", token);
-      dispatch(setRedirectAddress("/instructionPage"));
+      dispatch(setRedirectAddress("/userPage"));
       dispatch(allowRedirect(true));
       dispatch(setFailed(false));
       dispatch(setErrorMessage(""));

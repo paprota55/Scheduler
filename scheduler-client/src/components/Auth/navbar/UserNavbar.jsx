@@ -1,12 +1,10 @@
-import React from 'react';
+import React from "react";
 import { useDispatch } from "react-redux";
-import { Navbar, Nav, Form, Button, Image } from "react-bootstrap"
+import { Navbar, Nav, Form, Button, Image } from "react-bootstrap";
 import { logout } from "../../../features/authentication/authSlice";
 import Logo from "../../../resources/ikona.png";
 
-
 const UserNavbar = () => {
-
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -14,15 +12,24 @@ const UserNavbar = () => {
   };
   return (
     <>
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/instructionPage"><Image src={Logo} width="70"
-          height="70"
-          style={{ zIndex: "3" }} /></Navbar.Brand>
+      <Navbar
+        bg="light"
+        variant="light"
+        style={{ width: "100vw", margin: "0", padding: "0" }}
+      >
+        <Navbar.Brand href="/userPage">
+          <Image src={Logo} width="70" height="70" />
+        </Navbar.Brand>
         <Nav className="mr-auto" style={{ fontSize: "25px" }}>
-          <Nav.Link href="#/addUserAcc">Utwórz konto mieszkańca</Nav.Link>
+          <Nav.Link href="#/instruction">Instrukcja</Nav.Link>
+          <Nav.Link href="#/calendar">Harmonogram</Nav.Link>
+          <Nav.Link href="#/blocks">Zarządzaj blokami</Nav.Link>
+          <Nav.Link href="#/settings">Ustawienia</Nav.Link>
         </Nav>
         <Form inline>
-          <Button variant="outline-info" onClick={handleLogout} href="/login">Wyloguj</Button>
+          <Button variant="outline-info" onClick={handleLogout} href="/login">
+            Wyloguj
+          </Button>
         </Form>
       </Navbar>
     </>
