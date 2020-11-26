@@ -12,8 +12,8 @@ public class SettingsService {
     private final SettingsRepository settingsRepository;
     private final UserService userService;
     private Integer defaultTime = 14;
-    private Integer maximumTime = 93;
-    private Integer minimumTime = 1;
+    private Integer maximumTime = 99;
+    private Integer minimumTime = 0;
 
     @Autowired
     public SettingsService(SettingsRepository settingsRepository, UserService userService) {
@@ -39,13 +39,13 @@ public class SettingsService {
     }
 
     public Long changeSettings(SettingsDTO settingsDTO, Settings settings) {
-        if (settingsDTO.getTimeToArchive() != null) {
-            if (settingsDTO.getTimeToArchive() > this.maximumTime) {
+        if (settingsDTO.getNewTime() != null) {
+            if (settingsDTO.getNewTime() > this.maximumTime) {
                 settings.setTimeToArchive(this.maximumTime);
-            } else if (settingsDTO.getTimeToArchive() < this.minimumTime) {
+            } else if (settingsDTO.getNewTime() < this.minimumTime) {
                 settings.setTimeToArchive(this.minimumTime);
             } else {
-                settings.setTimeToArchive(settingsDTO.getTimeToArchive());
+                settings.setTimeToArchive(settingsDTO.getNewTime());
             }
         } else {
             settings.setTimeToArchive(this.defaultTime);

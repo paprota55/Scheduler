@@ -5,13 +5,14 @@ import pl.rafalpaprota.schedulerserver.model.Settings;
 
 @Data
 public class SettingsDTO {
-    private Integer timeToArchive;
+    private Integer newTime;
+    private String password;
 
     public SettingsDTO() {
     }
 
     public SettingsDTO(Settings settings) {
-        this.timeToArchive = settings.getTimeToArchive();
+        this.newTime = settings.getTimeToArchive();
     }
 }
 
