@@ -3,10 +3,7 @@ package pl.rafalpaprota.schedulerserver.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.rafalpaprota.schedulerserver.dto.BlockDTO;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.services.BlockService;
@@ -27,20 +24,23 @@ public class BlocksController {
     @RequestMapping(method = RequestMethod.POST, value = "api/blocks/addBlock")
     public ResponseEntity<?> addBlock(@RequestBody BlockDTO blockDTO) {
         User user = this.userService.getCurrentUser();
-        if (!this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
-            this.blockService.addBlockToDB(blockDTO, user);
-            return ResponseEntity.ok("Blok został dodany.");
+        if (this.blockService.checkDatesCorrectness(blockDTO.getDateFrom(), blockDTO.getDateTo())) {
+            if (!this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
+                this.blockService.addBlockToDB(blockDTO, user);
+                return ResponseEntity.ok("Blok został dodany.");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Blok o podanej nazwie już istnieje.");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Blok o podanej nazwie już istnieje.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Daty są niepoprawne.");
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "api/blocks/deleteBlock")
-    public ResponseEntity<?> deleteBlock(@RequestBody BlockDTO blockDTO) {
-
+    @RequestMapping(method = RequestMethod.DELETE, value = "api/blocks/deleteBlock/{blockName}")
+    public ResponseEntity<?> deleteBlock(@PathVariable final String blockName) {
         User user = this.userService.getCurrentUser();
-        if (this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
-            this.blockService.deleteBlockFromDB(blockDTO.getBlockName(), user);
+        if (this.blockService.checkBlockExist(blockName, user)) {
+            this.blockService.deleteBlockFromDB(blockName, user);
             return ResponseEntity.ok("Blok został usunięty.");
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Nie posiadasz bloku o takiej nazwie.");
@@ -50,10 +50,5 @@ public class BlocksController {
     @RequestMapping(method = RequestMethod.GET, value = "api/blocks/getBlocks")
     public ResponseEntity<?> getMyBlocks() {
         return ResponseEntity.ok(this.blockService.getCurrentUserBlocks());
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "admin/blocks/getAllBlocks")
-    public ResponseEntity<?> getAllBlocks() {
-        return ResponseEntity.ok(this.blockService.getAllBlocks());
     }
 }

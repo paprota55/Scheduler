@@ -60,6 +60,7 @@ public class DatabaseLoader implements CommandLineRunner {
             Settings settings = this.settingsService.createNewSettings(user);
             this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now(), LocalDateTime.now().plusDays(10)), user);
             this.userService.addUser(user);
+            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(20)), user);
         }
     }
 }

@@ -3,11 +3,13 @@ package pl.rafalpaprota.schedulerserver.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.rafalpaprota.schedulerserver.dto.BlockDTO;
+import pl.rafalpaprota.schedulerserver.dto.BlockDisplayDTO;
 import pl.rafalpaprota.schedulerserver.model.Block;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.BlockRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,11 @@ public class BlockService {
         return block != null;
     }
 
+    public Boolean checkDatesCorrectness(LocalDateTime dateFrom, LocalDateTime dateTo) {
+        return !dateFrom.isAfter(dateTo);
+    }
+
+
     public Long addBlockToDB(BlockDTO blockDTO, User user) {
         Block block = new Block();
         block.setBlockName(blockDTO.getBlockName());
@@ -42,19 +49,18 @@ public class BlockService {
         this.blockRepository.deleteBlockByBlockNameAndUser(blockName, user);
     }
 
-    public List<BlockDTO> getCurrentUserBlocks() {
+//    public List<Block> getCurrentUserBlocks() {
+//        User user = this.userService.getCurrentUser();
+//        return this.blockRepository.findAllByUser(user);
+//    }
+
+    public List<BlockDisplayDTO> getCurrentUserBlocks() {
         User user = this.userService.getCurrentUser();
         ArrayList<Block> blockList = (ArrayList<Block>) this.blockRepository.findAllByUser(user);
-        ArrayList<BlockDTO> blockDTOList = new ArrayList<>();
+        ArrayList<BlockDisplayDTO> blockDTOList = new ArrayList<>();
         for (Block current : blockList) {
-            blockDTOList.add(new BlockDTO(current.getBlockName(), current.getDateFrom(), current.getDateTo()));
+            blockDTOList.add(new BlockDisplayDTO(current.getBlockName(), current.getDateFrom(), current.getDateTo()));
         }
         return blockDTOList;
-    }
-
-
-    ///////////////////////Admin//////////////////////////////
-    public List<Block> getAllBlocks() {
-        return (List<Block>) this.blockRepository.findAll();
     }
 }
