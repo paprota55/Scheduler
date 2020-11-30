@@ -417,6 +417,7 @@ class Demo extends React.PureComponent {
         <Scheduler
           data={data}
           locale={"pl"}
+          fullSize ={"true"}
           height={"100vh"}
         >
           <ViewState

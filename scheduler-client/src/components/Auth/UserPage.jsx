@@ -4,7 +4,8 @@ import Instruction from "./instruction/InstructionPage";
 import UserNavbar from "./navbar/UserNavbar";
 import { Container } from "@material-ui/core";
 import Scheduler from "./scheduler/Scheduler";
-import Settings from "./userSettings/AccountSettings"
+import Settings from "./userSettings/AccountSettings";
+import Blocks from "./blocks/BlocksPage";
 
 const UserPage = () => {
   return (
@@ -18,6 +19,7 @@ const UserPage = () => {
             <Route path="/instruction" component={Instruction} />
             <Route path="/calendar" component={Scheduler} />
             <Route path="/settings" component={Settings} />
+            <Route path="/blocks" component={Blocks} />
           </Switch>
         </HashRouter>
       </Container>

@@ -23,6 +23,7 @@ const UserNavbar = () => {
         <Nav className="mr-auto" style={{ fontSize: "25px" }}>
           <Nav.Link href="#/instruction">Instrukcja</Nav.Link>
           <Nav.Link href="#/calendar">Harmonogram</Nav.Link>
+          <Nav.Link href="#/calendarHistory">Historia</Nav.Link>
           <Nav.Link href="#/blocks">Zarządzaj blokami</Nav.Link>
           <Nav.Link href="#/settings">Ustawienia</Nav.Link>
         </Nav>
