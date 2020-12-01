@@ -17,7 +17,6 @@ import {
   rePasswordChange,
   toggleDidSubmit,
   selectAll,
-  reset,
   register,
   toggleSuccess,
 } from "../../../features/register/registerSlice";

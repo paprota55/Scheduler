@@ -5,6 +5,7 @@ import serverIP from "../../config";
 const API_URL = serverIP;
 const GetBlocks = "api/blocks/getBlocks";
 const UpdateBlock = "api/blocks/modifyBlock";
+const AddBlock ="api/blocks/addBlock";
 
 const initialState = {
   blocks: [],
@@ -74,5 +75,27 @@ export const updateBlock = (editBlock, alert) => async (dispatch) => {
     }
   }
 };
+
+export const addBlock = (addBlock, alert) => async (dispatch) => {
+  try {
+    await axios.post(API_URL + AddBlock, addBlock, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    alert.success("Blok został dodany");
+  } catch (error) {
+    if(error.response.status === 409)
+    {
+    alert.error("Blok o podanej nazwie już istnieje");
+    }
+    else if (error.response.status === 409 ){
+      alert.error("Podałeś nieprawidłowe daty");
+    }
+    else{
+      alert.error("Serwer nie odpowiada.");
+    }
+  }
+}
 
 export default blocksSlice.reducer;
