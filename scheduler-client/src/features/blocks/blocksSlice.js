@@ -4,6 +4,7 @@ import serverIP from "../../config";
 
 const API_URL = serverIP;
 const GetBlocks = "api/blocks/getBlocks";
+const UpdateBlock = "api/blocks/modifyBlock";
 
 const initialState = {
   blocks: [],
@@ -51,6 +52,26 @@ export const deleteBlock = (blockName, alert) => async (dispatch) => {
     alert.success("Operacja przebiegła pomyślnie.");
   } catch (error) {
     alert.error("Coś poszło źle.");
+  }
+};
+
+export const updateBlock = (editBlock, alert) => async (dispatch) => {
+  try {
+    await axios.put(API_URL + UpdateBlock, editBlock, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    dispatch(fetchBlocks());
+    alert.success("Operacja przebiegła pomyślnie.");
+  } catch (error) {
+    if(error.response.status === 400)
+    {
+    alert.error("Problem z podanymi datami. Spróbuj ponownie.");
+    }
+    else{
+      alert.error("Nie posiadasz bloku o podanej nazwie.");
+    }
   }
 };
 

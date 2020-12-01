@@ -34,6 +34,15 @@ public class BlockService {
         return !dateFrom.isAfter(dateTo);
     }
 
+    public void modifyBlockInDB(BlockDTO blockDTO, User user) {
+        Block block = this.blockRepository.findByBlockNameAndUser(blockDTO.getBlockName(), user);
+        block.setDateFrom(blockDTO.getDateFrom().plusDays(1).withHour(0));
+        block.setDateTo(blockDTO.getDateTo().plusDays(1).withHour(0));
+        System.out.println(block.getDateTo());
+        System.out.println(block.getDateFrom());
+        this.blockRepository.save(block);
+    }
+
 
     public Long addBlockToDB(BlockDTO blockDTO, User user) {
         Block block = new Block();

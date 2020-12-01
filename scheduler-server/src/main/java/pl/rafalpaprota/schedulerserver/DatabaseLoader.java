@@ -6,7 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.rafalpaprota.schedulerserver.dto.BlockDTO;
-import pl.rafalpaprota.schedulerserver.model.Settings;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.UserRepository;
 import pl.rafalpaprota.schedulerserver.services.BlockService;
@@ -57,10 +56,10 @@ public class DatabaseLoader implements CommandLineRunner {
             Long id = this.userService.addUser(user);
             user = this.userRepository.findById(id).get();
 
-            Settings settings = this.settingsService.createNewSettings(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now(), LocalDateTime.now().plusDays(10)), user);
+            this.settingsService.createNewSettings(user);
+            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(0)), user);
             this.userService.addUser(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(20)), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(0)), user);
         }
     }
 }
