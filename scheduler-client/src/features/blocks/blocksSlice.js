@@ -36,7 +36,6 @@ export const fetchBlocks = () => async (dispatch) => {
       },
     });
     dispatch(setBlocks(response.data));
-    console.log(response.data)
   } catch (error) {
     console.log(error);
   }
@@ -84,6 +83,7 @@ export const addBlock = (addBlock, alert) => async (dispatch) => {
       },
     });
     alert.success("Blok został dodany");
+    window.location.reload(false);
   } catch (error) {
     if(error.response.status === 409)
     {

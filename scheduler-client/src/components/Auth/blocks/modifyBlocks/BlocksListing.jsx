@@ -6,9 +6,11 @@ import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import BlockDelete from "./BlockDelete";
 import { Button } from "@material-ui/core";
-import { deleteBlock, updateBlock } from "../../../../features/blocks/blocksSlice";
+import {
+  deleteBlock,
+  updateBlock,
+} from "../../../../features/blocks/blocksSlice";
 import BlockModify from "./BlockModify";
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -26,7 +28,7 @@ const BlocksListing = ({ info, index }) => {
   const [open2, setOpen2] = React.useState(false);
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
-  const [blockName] = useState(info.blockName);
+  const [blockName, setBlockName] = useState(info.blockName);
 
   const btnHandlerBack1 = () => {
     setOpen1(false);
@@ -39,16 +41,21 @@ const BlocksListing = ({ info, index }) => {
   const handleDelete = () => {
     dispatch(deleteBlock(info.blockName, alert));
     setOpen2(false);
-    window.location.reload(false);
+    handleReset();
+  };
+
+  const handleReset = () => {
+    setDateFrom(null);
+    setDateTo(null);
+    setBlockName(null);
   };
 
   const handleModify = () => {
-    setDateTo(dateTo + "T00:00:00");
-    setDateFrom(dateFrom + "T00:00:00");
-    dispatch(updateBlock({blockName, dateFrom, dateTo},alert));
-    console.log(info.blockName);
+    setDateTo(dateTo);
+    setDateFrom(dateFrom);
+    dispatch(updateBlock({ blockName, dateFrom, dateTo }, alert));
     setOpen1(false);
-    window.location.reload(false);
+    handleReset();
   };
 
   const handleToggle1 = () => {
@@ -59,6 +66,10 @@ const BlocksListing = ({ info, index }) => {
     setOpen2(!open2);
   };
 
+  const handleToggle3 = () => {
+    alert.error("Dodaj ładowanie danych ...");
+  };
+
   return (
     <>
       <tr style={{ width: "100%" }}>
@@ -66,6 +77,11 @@ const BlocksListing = ({ info, index }) => {
         <td className={classes.row}>{info.blockName}</td>
         <td className={classes.row}>{info.dateFrom}</td>
         <td className={classes.row}>{info.dateTo} </td>
+        <td>
+          <Button variant="outlined" color="primary" onClick={handleToggle3}>
+            Załaduj
+          </Button>
+        </td>
         <td>
           <Button variant="outlined" color="primary" onClick={handleToggle1}>
             Zmień
@@ -83,10 +99,10 @@ const BlocksListing = ({ info, index }) => {
           btnHandler={handleModify}
           block={info}
           btnHandlerBack={btnHandlerBack1}
-          dateFrom = {dateFrom}
-          dateTo = {dateTo}
-          setDateFrom = {setDateFrom}
-          setDateTo = {setDateTo}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          setDateFrom={setDateFrom}
+          setDateTo={setDateTo}
         />
       </Backdrop>
       <Backdrop className={classes.backdrop} open={open2}>

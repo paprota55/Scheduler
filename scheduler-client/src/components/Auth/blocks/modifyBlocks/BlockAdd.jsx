@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import { Paper, Button, Grid } from "@material-ui/core";
-import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import pl from "date-fns/locale/pl";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
 import { useAlert } from "react-alert";
-import { useDispatch } from "react-redux";
-import { addBlock } from "../../../../features/blocks/blocksSlice";
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import plLocale from "date-fns/locale/pl";
 
-const BlockAdd = () => {
+const BlockAdd = ({
+  btnHandler,
+  btnHandlerBack,
+  dateFrom,
+  dateTo,
+  blockName,
+  setDateFrom,
+  setDateTo,
+  setBlockName,
+}) => {
   const alert = useAlert();
-  const dispatch = useDispatch();
-  const [blockName, setBlockName] = useState("");
-  const [dateFrom, setDateFrom] = useState(null);
-  const [dateTo, setDateTo] = useState(null);
 
   function submit(event) {
     event.preventDefault();
-    let block = {
-        blockName : blockName,
-        dateFrom : dateFrom,
-        dateTo : dateTo,
-    };
-    console.log(blockName);
-    console.log(dateFrom);
-    console.log(dateTo);
-
-    if (dateFrom && dateTo && blockName != "" && dateFrom < dateTo) {
-        dispatch(addBlock(block,alert));
+    if (dateFrom && dateTo && blockName !== "" && dateFrom < dateTo) {
+      btnHandler();
     } else {
       alert.error("Nie podałeś nazwy, bądź zła data");
     }
@@ -39,7 +38,7 @@ const BlockAdd = () => {
   };
 
   return (
-    <Paper style={{ width: "100%", height: "80vh" }}>
+    <Paper style={{ width: "30%", height: "80%" }}>
       <ValidatorForm onSubmit={submit}>
         <Grid
           container
@@ -80,26 +79,40 @@ const BlockAdd = () => {
             />
           </Grid>
           <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
-            <a>Data od: </a>
-            <ReactDatePicker
-              selected={dateFrom}
-              onChange={(date) => setDateFrom(date)}
-              dateFormat="yyyy-MM-dd"
-              disabledKeyboardNavigation
-              showWeekNumbers
-              locale={pl}
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={plLocale}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              helperText="Podaj prawidłowy format"
+              format="dd-MM-yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Data od"
+              value={dateFrom}
+              onChange={date => setDateFrom(date)}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
             />
+          </MuiPickersUtilsProvider>
           </Grid>
           <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
-            <a>Data do: </a>
-            <ReactDatePicker
-              selected={dateTo}
-              onChange={(date) => setDateTo(date)}
-              dateFormat="yyyy-MM-dd"
-              disabledKeyboardNavigation
-              showWeekNumbers
-              locale={pl}
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={plLocale}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              helperText="Podaj prawidłowy format"
+              format="dd-MM-yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Data do"
+              value={dateTo}
+              onChange={date => setDateTo(date)}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
             />
+          </MuiPickersUtilsProvider>
           </Grid>
           <Grid
             xs={12}
@@ -112,6 +125,15 @@ const BlockAdd = () => {
             <a>
               <Button type="submit" variant="contained" color="secondary">
                 Dodaj
+              </Button>
+            </a>
+            <a>
+              <Button
+                onClick={btnHandlerBack}
+                variant="contained"
+                color="primary"
+              >
+                Wróć
               </Button>
             </a>
           </Grid>

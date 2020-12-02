@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FullWidthTabs() {
+const BlocksPage = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -91,11 +91,11 @@ export default function FullWidthTabs() {
           <BlockAdd/>
         </TabPanel>
         <TabPanel className = {classes.tabPanel} value={value} index={1} dir={theme.direction}>
-            <div className = {classes.tabPanel}>
           <BlocksListingStructure />
-          </div>
         </TabPanel>
       </SwipeableViews>
     </div>
   );
 }
+
+export default BlocksPage;
