@@ -20,9 +20,9 @@ public class BlockService {
     private final UserService userService;
 
     @Autowired
-    public BlockService(BlockRepository blockRepository, UserService userService, UserService userService1) {
+    public BlockService(BlockRepository blockRepository, UserService userService) {
         this.blockRepository = blockRepository;
-        this.userService = userService1;
+        this.userService = userService;
     }
 
     public Boolean checkBlockExist(String blockName, User user) {
@@ -36,19 +36,19 @@ public class BlockService {
 
     public void modifyBlockInDB(BlockDTO blockDTO, User user) {
         Block block = this.blockRepository.findByBlockNameAndUser(blockDTO.getBlockName(), user);
-        block.setDateFrom(blockDTO.getDateFrom().plusDays(1).withHour(0));
-        block.setDateTo(blockDTO.getDateTo().plusDays(1).withHour(0));
+        block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0));
+        block.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0));
+        System.out.println(block.getBlockName());
         System.out.println(block.getDateTo());
         System.out.println(block.getDateFrom());
         this.blockRepository.save(block);
     }
 
-
     public Long addBlockToDB(BlockDTO blockDTO, User user) {
         Block block = new Block();
         block.setBlockName(blockDTO.getBlockName());
-        block.setDateTo(blockDTO.getDateTo());
-        block.setDateFrom(blockDTO.getDateFrom());
+        block.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0));
+        block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0));
         block.setUser(user);
 
         return this.blockRepository.save(block).getId();
@@ -58,18 +58,36 @@ public class BlockService {
         this.blockRepository.deleteBlockByBlockNameAndUser(blockName, user);
     }
 
-//    public List<Block> getCurrentUserBlocks() {
-//        User user = this.userService.getCurrentUser();
-//        return this.blockRepository.findAllByUser(user);
-//    }
-
     public List<BlockDisplayDTO> getCurrentUserBlocks() {
         User user = this.userService.getCurrentUser();
-        ArrayList<Block> blockList = (ArrayList<Block>) this.blockRepository.findAllByUser(user);
+        ArrayList<Block> blockList = sortBlockList((ArrayList<Block>) this.blockRepository.findAllByUser(user));
         ArrayList<BlockDisplayDTO> blockDTOList = new ArrayList<>();
         for (Block current : blockList) {
             blockDTOList.add(new BlockDisplayDTO(current.getBlockName(), current.getDateFrom(), current.getDateTo()));
         }
         return blockDTOList;
+    }
+
+    public ArrayList<Block> sortBlockList(ArrayList<Block> listToSort) {
+        ArrayList<Block> newList = new ArrayList<>();
+        if (listToSort != null) {
+            if (listToSort.size() == 1) {
+                return listToSort;
+            }
+            int index = 0;
+            for (int i = listToSort.size() - 1; i > 0; i--) {
+                for (int j = listToSort.size() - 1; j > 0; j--) {
+                    if (listToSort.get(index).getDateFrom().isAfter(listToSort.get(j).getDateFrom())) {
+                        index = j;
+                    }
+                }
+                newList.add(listToSort.get(index));
+                listToSort.remove(index);
+                index = 0;
+            }
+            newList.add(listToSort.get(0));
+            return newList;
+        }
+        return listToSort;
     }
 }
