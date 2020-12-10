@@ -15,7 +15,7 @@ const UserNavbar = () => {
       <Navbar
         bg="light"
         variant="light"
-        style={{ width: "100vw", margin: "0", padding: "0" }}
+        style={{ width: "100%", margin: "0", padding: "0" }}
       >
         <Navbar.Brand href="/userPage">
           <Image src={Logo} width="70" height="70" />

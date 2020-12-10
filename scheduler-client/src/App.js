@@ -27,6 +27,7 @@ function PrivateRoute({ component: Component, ...rest }) {
 
 function App() {
   return (
+    <div style={{width: "100%", margin: 0}}>
     <Router basename="/">
       <Switch>
         <Route exact path="/register" component={RegisterPage} />
@@ -35,6 +36,7 @@ function App() {
         <Route exact path="*" component={LoginPage} />
       </Switch>
     </Router>
+    </div>
   );
 }
 
