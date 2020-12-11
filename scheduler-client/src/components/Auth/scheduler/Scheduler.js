@@ -19,7 +19,6 @@ import {
   ConfirmationDialog,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
-import { appointments } from "./appointments";
 import { types } from "./Types";
 import { status } from "./Status";
 
@@ -27,7 +26,7 @@ export default class Calendar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: appointments,
+      data: this.props.events,
       resources: [
         {
           fieldName: "typeId",
@@ -43,7 +42,6 @@ export default class Calendar extends React.PureComponent {
         },
       ],
       currentDate: new Date(),
-
       addedAppointment: {},
       appointmentChanges: {},
       editingAppointment: undefined,
@@ -75,9 +73,10 @@ export default class Calendar extends React.PureComponent {
       let { data } = state;
 
       if (added) {
-        const startingAddedId =
-          data.length > 0 ? data[data.length - 1].id + 1 : 0;
-        data = [...data, { id: startingAddedId,  rRule:'',  typeId: undefined,  exDate: '', ...added,statusId: 1}];
+        this.props.addNewEventt({ notes:'',  rRule:'',  typeId: 9,  exDate: '', ...added,statusId: 1});
+        // const startingAddedId =
+        //   data.length > 0 ? data[data.length - 1].id + 1 : 0;
+        // data = [...data, { id: startingAddedId, notes:'',  rRule:'',  typeId: 9,  exDate: '', ...added,statusId: 1}];
       }
       if (changed) {
         data = data.map((appointment) =>
@@ -87,20 +86,10 @@ export default class Calendar extends React.PureComponent {
         );
       }
       if (deleted !== undefined) {
+        console.log("I'm in");
+        this.props.deleteEventt(deleted);
         data = data.filter((appointment) => appointment.id !== deleted);
       }
-
-      console.log("Added");
-      console.log(added);
-
-      console.log("changed");
-      console.log(changed);
-
-      console.log("deleted");
-      console.log(deleted);
-
-      console.log("Data");
-      console.log(data);
 
       return { data };
     });
@@ -122,6 +111,7 @@ export default class Calendar extends React.PureComponent {
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={this.currentDateChange}
+            defaultCurrentViewName = "week"
           />
           <EditingState
             onCommitChanges={this.commitChanges}
@@ -134,7 +124,7 @@ export default class Calendar extends React.PureComponent {
           />
           <EditRecurrenceMenu />
           <DayView startDayHour={7} endDayHour={21} displayName="Dzień"/>
-          <WeekView startDayHour={7} endDayHour={21} displayName="Tydzień"/>
+          <WeekView name= "week" startDayHour={7} endDayHour={21} displayName="Tydzień"/>
           <MonthView displayName="Miesiąc"/>
           <Toolbar />
           <ViewSwitcher />

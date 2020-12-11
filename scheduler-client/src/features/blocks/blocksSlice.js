@@ -51,7 +51,7 @@ export const deleteBlock = (blockName, alert) => async (dispatch) => {
     dispatch(fetchBlocks());
     alert.success("Operacja przebiegła pomyślnie.");
   } catch (error) {
-    alert.error("Coś poszło źle.");
+    alert.error("Serwer nie odpowiada.");
   }
 };
 

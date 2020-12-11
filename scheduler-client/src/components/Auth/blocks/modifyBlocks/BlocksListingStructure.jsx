@@ -13,6 +13,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { makeStyles } from "@material-ui/core/styles";
 import BlockAdd from "./BlockAdd";
 import { addBlock } from "../../../../features/blocks/blocksSlice";
+import { fetchEvents } from "../../../../features/scheduler/schedulerSlice";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -36,6 +37,10 @@ const BlocksListingStructure = () => {
 
   const handleToggle = () => {
     setOpen(true);
+  };
+
+  const loadData = () => {
+    dispatch(fetchEvents(alert));
   };
 
   const handleBlockAdded = () => {
@@ -82,6 +87,9 @@ const BlocksListingStructure = () => {
         </Table>
         <Button variant="outlined" color="secondary" onClick={handleToggle}>
           Dodaj
+        </Button>
+        <Button variant="outlined" color="primary" onClick={loadData}>
+          Załaduj pełny
         </Button>
       </div>
       <Backdrop className={classes.backdrop} open={open}>
