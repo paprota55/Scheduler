@@ -14,22 +14,31 @@ public class Event {
     private Long id;
 
     @Column
-    private String name;
+    private String title;
 
     @Column(nullable = false)
-    private LocalDateTime dateFrom;
+    private LocalDateTime startDate;
 
     @Column(nullable = false)
-    private LocalDateTime dateTo;
-
-    @Column(nullable = false)
-    private String colour;
+    private LocalDateTime endDate;
 
     @Column
-    private String description;
+    private Boolean allDay;
 
-    @Column(nullable = false)
-    private String status;
+    @Column
+    private Integer typeId;
+
+    @Column
+    private Integer statusId;
+
+    @Column
+    private String notes;
+
+    @Column
+    private String rRule;
+
+    @Column
+    private String exDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
