@@ -1,5 +1,6 @@
 package pl.rafalpaprota.schedulerserver.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import pl.rafalpaprota.schedulerserver.model.Event;
 
@@ -23,6 +24,7 @@ public class EventDTO {
 
     private String notes;
 
+    @JsonProperty("rRule")
     private String rRule;
 
     private String exDate;

@@ -26,6 +26,9 @@ public class BlockService {
     }
 
     public Boolean checkBlockExist(String blockName, User user) {
+        if (blockName.equals("all")) {
+            return true;
+        }
         Block block = this.blockRepository.findByBlockNameAndUser(blockName, user);
         return block != null;
     }
@@ -56,6 +59,10 @@ public class BlockService {
 
     public void deleteBlockFromDB(String blockName, User user) {
         this.blockRepository.deleteBlockByBlockNameAndUser(blockName, user);
+    }
+
+    public Block getBlockByUserAndBlockName(User user, String blockName) {
+        return this.blockRepository.findByBlockNameAndUser(blockName, user);
     }
 
     public List<BlockDisplayDTO> getCurrentUserBlocks() {

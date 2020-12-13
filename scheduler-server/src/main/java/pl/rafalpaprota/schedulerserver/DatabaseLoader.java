@@ -65,8 +65,8 @@ public class DatabaseLoader implements CommandLineRunner {
             this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(0)), user);
             Event event = new Event();
             event.setUser(user);
-            event.setExDate(null);
-            event.setRRule(null);
+            event.setExDate("");
+            event.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
             event.setStatusId(1);
             event.setTypeId(1);
             event.setAllDay(false);

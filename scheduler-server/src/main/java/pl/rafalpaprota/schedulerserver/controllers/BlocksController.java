@@ -70,27 +70,3 @@ public class BlocksController {
         return ResponseEntity.ok(this.blockService.getCurrentUserBlocks());
     }
 }
-
-//    @RequestMapping(method = RequestMethod.PUT, value = "api/blocks/modifyBlock")
-//    public ResponseEntity<?> updateBlock(@RequestBody BlockDisplayDTO blockDisplayDTO) {
-//        User user = this.userService.getCurrentUser();
-//        if (this.blockService.checkBlockExist(blockDisplayDTO.getBlockName(), user)) {
-//            if (blockDisplayDTO.getDateFrom() != null && blockDisplayDTO.getDateTo() != null) {
-//                BlockDTO blockDTO = new BlockDTO(blockDisplayDTO);
-//                if (this.blockService.checkDatesCorrectness(blockDTO.getDateFrom(), blockDTO.getDateTo())) {
-//                    this.blockService.modifyBlockInDB(blockDTO, user);
-//                    return ResponseEntity.ok("Blok został zmieniony.");
-//                } else {
-//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zła kolejność dat.");
-//                }
-//            }
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podałeś którejś z dat.");
-//        } else {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Nie posiadasz bloku o takiej nazwie.");
-//        }
-//    }
-//
-//    @RequestMapping(method = RequestMethod.GET, value = "api/blocks/getBlocks")
-//    public ResponseEntity<?> getMyBlocks() {
-//        return ResponseEntity.ok(this.blockService.getCurrentUserBlocks());
-//    }
