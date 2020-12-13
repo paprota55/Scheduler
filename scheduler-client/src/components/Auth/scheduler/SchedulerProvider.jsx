@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Scheduler from "./Scheduler";
 import { useSelector, useDispatch } from "react-redux";
-import { selectData, addEvent, deleteEvent  } from "../../../features/scheduler/schedulerSlice";
+import { selectData, addEvent, deleteEvent, fetchEvents  } from "../../../features/scheduler/schedulerSlice";
 import { useAlert } from "react-alert";
 
 const SchedulerProvider = () => {
@@ -17,9 +17,14 @@ const SchedulerProvider = () => {
           dispatch(addEvent(event, alert));
         }
 
+        const changeOldEvent = (event) => {
+          console.log(event);
+        //  dispatch(changeEvent(event, alert));
+        }
+
   return (
     <div>
-      <Scheduler events = {data} deleteEventt = {deleteOldEvent} addNewEventt = {addNewEvent}/>
+      <Scheduler events = {data} deleteEventt = {deleteOldEvent} addNewEventt = {addNewEvent} changeOldEvent = {changeOldEvent}/>
     </div>
   );
 };

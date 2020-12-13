@@ -26,7 +26,6 @@ export default class Calendar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.events,
       resources: [
         {
           fieldName: "typeId",
@@ -69,36 +68,35 @@ export default class Calendar extends React.PureComponent {
   }
 
   commitChanges({ added, changed, deleted }) {
-    this.setState((state) => {
-      let { data } = state;
 
       if (added) {
-        this.props.addNewEventt({ notes:'',  rRule:'',  typeId: 9,  exDate: '', ...added,statusId: 1});
-        // const startingAddedId =
-        //   data.length > 0 ? data[data.length - 1].id + 1 : 0;
-        // data = [...data, { id: startingAddedId, notes:'',  rRule:'',  typeId: 9,  exDate: '', ...added,statusId: 1}];
+        this.props.addNewEventt({ allDay: false, notes:"",  rRule:"",  typeId: 9,  exDate: "", ...added,statusId: 1});
       }
+      // if (changed) {
+      //   data = data.map((appointment) =>
+      //     changed[appointment.id]
+      //       ? { ...appointment, ...changed[appointment.id] }
+      //       : appointment
+      //   );
+      // }
       if (changed) {
-        data = data.map((appointment) =>
-          changed[appointment.id]
-            ? { ...appointment, ...changed[appointment.id] }
-            : appointment
-        );
-      }
-      if (deleted !== undefined) {
-        console.log("I'm in");
-        this.props.deleteEventt(deleted);
-        data = data.filter((appointment) => appointment.id !== deleted);
+          this.props.events.map((appointment) =>
+            changed[appointment.id] 
+            ? this.props.changeOldEvent({...appointment, ...changed[appointment.id]}) 
+            : null
+
+          );
       }
 
-      return { data };
-    });
+      if (deleted !== undefined) {
+        this.props.deleteEventt(deleted);
+      }
+
   }
 
   render() {
     const {
       currentDate,
-      data,
       addedAppointment,
       appointmentChanges,
       editingAppointment,
@@ -107,7 +105,7 @@ export default class Calendar extends React.PureComponent {
 
     return (
       <Paper style={{ height: "91vh", justifyContent: "center" }}>
-        <Scheduler data={data} height={"100%"} locale={"pl"}>
+        <Scheduler data={this.props.events} height={"100%"} locale={"pl"} recurrenceRuleExpr="rRule" recurrenceExceptionExpr="exDate">
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={this.currentDateChange}

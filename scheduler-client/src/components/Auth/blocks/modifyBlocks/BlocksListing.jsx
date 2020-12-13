@@ -11,6 +11,7 @@ import {
   updateBlock,
 } from "../../../../features/blocks/blocksSlice";
 import BlockModify from "./BlockModify";
+import { fetchEventsByBlock, setBlockNameInSlice } from "../../../../features/scheduler/schedulerSlice";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -67,7 +68,8 @@ const BlocksListing = ({ info, index }) => {
   };
 
   const handleToggle3 = () => {
-    alert.error("Dodaj ładowanie danych ...");
+    dispatch(setBlockNameInSlice(info.blockName));
+    dispatch(fetchEventsByBlock(info.blockName,alert));
   };
 
   return (

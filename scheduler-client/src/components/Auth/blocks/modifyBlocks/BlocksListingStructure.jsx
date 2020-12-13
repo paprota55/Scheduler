@@ -13,7 +13,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { makeStyles } from "@material-ui/core/styles";
 import BlockAdd from "./BlockAdd";
 import { addBlock } from "../../../../features/blocks/blocksSlice";
-import { fetchEvents } from "../../../../features/scheduler/schedulerSlice";
+import { fetchEvents, setBlockNameInSlice } from "../../../../features/scheduler/schedulerSlice";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -40,6 +40,7 @@ const BlocksListingStructure = () => {
   };
 
   const loadData = () => {
+    dispatch(setBlockNameInSlice("all"));
     dispatch(fetchEvents(alert));
   };
 
