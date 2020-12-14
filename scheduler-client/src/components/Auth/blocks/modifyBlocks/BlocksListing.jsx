@@ -69,6 +69,7 @@ const BlocksListing = ({ info, index }) => {
 
   const handleToggle3 = () => {
     dispatch(setBlockNameInSlice(info.blockName));
+    console.log(info.blockName);
     dispatch(fetchEventsByBlock(info.blockName,alert));
   };
 

@@ -23,32 +23,32 @@ export const types = [
   },
   {
     text: "Sprawozdanie",
-    id: 4,
+    id: 5,
     color: orange,
   },
   {
     text: "Kartkówka",
-    id: 5,
+    id: 6,
     color: teal,
   },
   {
     text: "Egzamin",
-    id: 6,
+    id: 7,
     color: red,
   },
   {
     text: "Kolokwium",
-    id: 7,
+    id: 8,
     color: yellow,
   },
   {
     text: "Projekt",
-    id: 8,
+    id: 9,
     color: indigo,
   },
   {
     text: "Inne",
-    id: 9,
+    id: 10,
     color: lime,
   },
 ];

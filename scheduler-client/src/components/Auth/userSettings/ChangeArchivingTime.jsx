@@ -76,8 +76,8 @@ const ChangeArchiveTime = () => {
           className={classes.textField}
           label="Podaj ilość dni do archiwizacji (np. 9)"
           type="number"
-          validators={["required", "matchRegexp:^[0-9]{1,2}$"]}
-          errorMessages={["To pole jest wymagane", "Podaj liczbę od 0 do 99"]}
+          validators={["required", "matchRegexp:^[0-9]{1,3}$"]}
+          errorMessages={["To pole jest wymagane", "Podaj liczbę od 0 do 999"]}
         />
         <TextValidator
           className={classes.textField}

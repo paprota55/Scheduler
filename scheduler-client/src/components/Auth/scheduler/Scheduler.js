@@ -13,6 +13,7 @@ import {
   Resources,
   EditRecurrenceMenu,
   AllDayPanel,
+  DragDropProvider,
   Appointments,
   AppointmentForm,
   AppointmentTooltip,
@@ -21,6 +22,19 @@ import {
 
 import { types } from "./Types";
 import { status } from "./Status";
+import {
+  editRecurrenceMessages,
+  appointmentFormMessages,
+  confirmationDialogMessages,
+  todayButtonMessages,
+  allDayLocalizationMessages,
+} from "./pl";
+
+const getAppointmentFormMessages = (locale) => appointmentFormMessages[locale];
+const getConfirmationDialogMessages = (locale) => confirmationDialogMessages[locale];
+const getAllDayMessages = (locale) => allDayLocalizationMessages[locale];
+const getTodayButtonMessages = (locale) => todayButtonMessages[locale];
+const getEditRecurrenceMessages = (locale) => editRecurrenceMessages[locale];
 
 export default class Calendar extends React.PureComponent {
   constructor(props) {
@@ -40,6 +54,8 @@ export default class Calendar extends React.PureComponent {
           allowMultiple: false,
         },
       ],
+
+      locale: "pl",
       currentDate: new Date(),
       addedAppointment: {},
       appointmentChanges: {},
@@ -68,30 +84,34 @@ export default class Calendar extends React.PureComponent {
   }
 
   commitChanges({ added, changed, deleted }) {
-
-      if (added) {
-        this.props.addNewEventt({ allDay: false, notes:"",  rRule:"",  typeId: 9,  exDate: "", ...added,statusId: 1});
-      }
-      // if (changed) {
-      //   data = data.map((appointment) =>
-      //     changed[appointment.id]
-      //       ? { ...appointment, ...changed[appointment.id] }
-      //       : appointment
-      //   );
-      // }
-      if (changed) {
-          this.props.events.map((appointment) =>
-            changed[appointment.id] 
-            ? this.props.changeOldEvent({...appointment, ...changed[appointment.id]}) 
-            : null
-
-          );
-      }
-
-      if (deleted !== undefined) {
-        this.props.deleteEventt(deleted);
-      }
-
+    if (added) {
+      console.log("Wszedlem do added");
+      console.log(added);
+      this.props.addNewEventt({
+        allDay: false,
+        notes: "",
+        rRule: "",
+        typeId: 9,
+        exDate: "",
+        ...added,
+        statusId: 0,
+      });
+    }
+    if (changed) {
+      console.log("Wszedlem do changed");
+      console.log(changed);
+      this.props.events.map((appointment) =>
+        changed[appointment.id]
+          ? this.props.changeOldEvent({
+              ...appointment,
+              ...changed[appointment.id],
+            })
+          : null
+      );
+    }
+    if (deleted !== undefined) {
+      this.props.deleteEventt(deleted);
+    }
   }
 
   render() {
@@ -101,15 +121,22 @@ export default class Calendar extends React.PureComponent {
       appointmentChanges,
       editingAppointment,
       resources,
+      locale,
     } = this.state;
 
     return (
       <Paper style={{ height: "91vh", justifyContent: "center" }}>
-        <Scheduler data={this.props.events} height={"100%"} locale={"pl"} recurrenceRuleExpr="rRule" recurrenceExceptionExpr="exDate">
+        <Scheduler
+          data={this.props.events}
+          height={"100%"}
+          locale={locale}
+          recurrenceRuleExpr="rRule"
+          recurrenceExceptionExpr="exDate"
+        >
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={this.currentDateChange}
-            defaultCurrentViewName = "week"
+            defaultCurrentViewName="week"
           />
           <EditingState
             onCommitChanges={this.commitChanges}
@@ -120,19 +147,27 @@ export default class Calendar extends React.PureComponent {
             editingAppointment={editingAppointment}
             onEditingAppointmentChange={this.changeEditingAppointment}
           />
-          <EditRecurrenceMenu />
-          <DayView startDayHour={7} endDayHour={21} displayName="Dzień"/>
-          <WeekView name= "week" startDayHour={7} endDayHour={21} displayName="Tydzień"/>
-          <MonthView displayName="Miesiąc"/>
+          <EditRecurrenceMenu messages={getEditRecurrenceMessages(locale)} />
+          <DayView startDayHour={7} endDayHour={21} displayName="Dzień" />
+          <WeekView
+            name="week"
+            startDayHour={7}
+            endDayHour={21}
+            displayName="Tydzień"
+          />
+          <MonthView displayName="Miesiąc" />
           <Toolbar />
           <ViewSwitcher />
-          <TodayButton />
+          <TodayButton messages={getTodayButtonMessages(locale)} />
           <DateNavigator />
-          <ConfirmationDialog />
+          <ConfirmationDialog
+            messages={getConfirmationDialogMessages(locale)}
+          />
           <Appointments />
           <AppointmentTooltip showOpenButton showDeleteButton />
-          <AppointmentForm />
-          <AllDayPanel />
+          <AppointmentForm messages={getAppointmentFormMessages(locale)} />
+          <AllDayPanel messages={getAllDayMessages(locale)} />
+          <DragDropProvider />
           <Resources data={resources} mainResourceName="typeId" />
         </Scheduler>
       </Paper>

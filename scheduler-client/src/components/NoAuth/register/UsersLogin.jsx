@@ -21,7 +21,7 @@ const UsersLogin = ({
         name="login"
         label="Login"
         validators={["required"]}
-        errorMessages={["this field is required"]}
+        errorMessages={["To pole jest wymagane"]}
       />
         <TextValidator
         className={classes.textArea}
@@ -31,7 +31,7 @@ const UsersLogin = ({
         name="email"
         type="email"
         validators={["required", "isEmail"]}
-        errorMessages={["this field is required", "email is not valid"]}
+        errorMessages={["To pole jest wymagane", "email jest nieprawidłowy"]}
       />
     </Grid>
   );

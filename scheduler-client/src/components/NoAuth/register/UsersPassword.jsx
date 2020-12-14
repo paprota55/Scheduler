@@ -24,8 +24,8 @@ const UsersPassword = ({
           "matchRegexp:^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$",
         ]}
         errorMessages={[
-          "this field is required",
-          "Password must be at least 8 characters, including at least on special character and uppercase letter.",
+          "To pole jest wymagane",
+          " Hasło musi zawierać przynajmniej 8 znaków, dodatkowo: specjalny oraz duża litera.",
         ]}
       />
       <TextValidator
@@ -39,8 +39,8 @@ const UsersPassword = ({
           "matchRegexp:^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$",
         ]}
         errorMessages={[
-          "this field is required",
-          "Password must be at least 8 characters, including at least one special character and uppercase letter.",
+          "To pole jest wymagane",
+          " Hasło musi zawierać przynajmniej 8 znaków, dodatkowo: specjalny oraz duża litera.",
         ]}
       />
     </Grid>

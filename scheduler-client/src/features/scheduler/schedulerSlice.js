@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import serverIP from "../../config"
 
 const API_URL = serverIP;
@@ -64,9 +65,8 @@ export const fetchEvents = (alert) => async (dispatch) => {
   };
 
 
-  export const addEvent = (addEvent, alert) => async (dispatch) => {
-    console.log("AddEvent");
-    console.log(addEvent);
+  export const addEvent = (addEvent,blockName, alert) => async (dispatch) => {
+    console.log(blockName);
     try {
       await axios.post(API_URL + AddEvent, addEvent, {
         headers: {
@@ -74,7 +74,7 @@ export const fetchEvents = (alert) => async (dispatch) => {
         },
       });
       alert.success("Event został dodany");
-      dispatch(fetchEvents(alert));
+      dispatch(fetchCurrentData(blockName, alert));
     } catch (error) {
       if(error.response.status === 400){
         alert.error("Podana data jest nieprawidłowa.");
@@ -85,7 +85,7 @@ export const fetchEvents = (alert) => async (dispatch) => {
     }
   }
 
-  export const deleteEvent = (eventId, alert) => async (dispatch) => {
+  export const deleteEvent = (eventId,blockName, alert) => async (dispatch) => {
     try {
       await axios.delete(API_URL + `api/events/deleteEvent/${eventId}`, {
         headers: {
@@ -93,26 +93,46 @@ export const fetchEvents = (alert) => async (dispatch) => {
         },
       });
       alert.success("Wydarzenie zostało usunięte.");
-      dispatch(fetchEvents(alert));
+      dispatch(fetchCurrentData(blockName, alert));
     } catch (error) {
       alert.error("Serwer nie odpowiada.");
     }
   };
 
-  export const changeEvent = (changeEvent, alert) => async (dispatch) => {
-    console.log("ChangeEvent");
-    console.log(changeEvent);
+  export const changeEvent = (changeEvent,blockName, alert) => async (dispatch) => {
     try {
-      await axios.put(API_URL + AddEvent, changeEvent, {
+      await axios.put(API_URL + `api/events/changeEvent/${changeEvent.id}`, changeEvent, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       alert.success("Pomyślnie zmieniono wydarzenie.");
-      dispatch(fetchEvents(alert));
+      dispatch(fetchCurrentData(blockName, alert));
     } catch (error) {
-        alert.error("Serwer nie odpowiada.");
+      if(error.response.status === 409){
+        alert.error("Wprowadzone zostały złe daty.");
+      }
+      else if(error.response.status === 400){
+        alert.error("Wydarzenie o podanym ID nie istnieje.");
     }
+    else{
+      alert.error("Serwer nie odpowiada.");
+    }
+  }
+}
+
+  export const fetchCurrentData = (blockName, alert) => async (dispatch) => {
+    console.log(blockName);
+      try{
+        const response = await axios.get(API_URL + `api/events/getEvents/${blockName}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        dispatch(setEvents(response.data));
+      } catch(error){
+        alert.error("Serwer nie odpowiada.");
+      }
   }
 
 export default schedulerSlice.reducer;
