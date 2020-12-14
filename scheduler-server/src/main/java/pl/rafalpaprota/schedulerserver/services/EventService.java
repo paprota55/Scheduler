@@ -42,10 +42,49 @@ public class EventService {
         return this.eventRepository.save(newEvent).getId();
     }
 
-    //TODO Przygotuj to
-    public void changeEvent(EventDTO eventDTO) {
+    public boolean checkIfExist(Long id) {
+        Event oldEvent = this.eventRepository.findById(id).get();
+        if (oldEvent != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Long changeEvent(EventDTO eventDTO) {
         Event oldEvent = this.eventRepository.findById(eventDTO.getId()).get();
-        
+        boolean edited = false;
+        boolean moved = false;
+        if (!oldEvent.getStartDate().isEqual(eventDTO.getStartDate().plusHours(1)) || !oldEvent.getEndDate().isEqual(eventDTO.getEndDate().plusHours(1)) || !oldEvent.getAllDay().equals(eventDTO.getAllDay())) {
+            moved = true;
+            if (oldEvent.getExDate().equals(eventDTO.getExDate())) {
+                oldEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
+                oldEvent.setStartDate(eventDTO.getStartDate().plusHours(1));
+            }
+        }
+        if (!oldEvent.getNotes().equals(eventDTO.getNotes())
+                || !oldEvent.getExDate().equals(eventDTO.getExDate())
+                || !oldEvent.getRRule().equals(eventDTO.getRRule())
+                || !oldEvent.getTitle().equals(eventDTO.getTitle())
+                || !oldEvent.getTypeId().equals(eventDTO.getTypeId())) {
+            edited = true;
+        }
+
+        if (edited && moved) {
+            oldEvent.setStatusId(3);
+        } else if (!edited && moved) {
+            oldEvent.setStatusId(1);
+        } else {
+            oldEvent.setStatusId(2);
+        }
+        oldEvent.setAllDay(eventDTO.getAllDay());
+        oldEvent.setTitle(eventDTO.getTitle());
+        oldEvent.setNotes(eventDTO.getNotes());
+        oldEvent.setTypeId(eventDTO.getTypeId());
+        oldEvent.setRRule(eventDTO.getRRule());
+        oldEvent.setExDate(eventDTO.getExDate());
+        return this.eventRepository.save(oldEvent).getId();
+
     }
 
 
@@ -81,4 +120,6 @@ public class EventService {
     public boolean checkIfEventIsThisUser(Long eventId) {
         return this.eventRepository.findByIdAndUser(eventId, this.userService.getCurrentUser()) != null;
     }
+
+
 }

@@ -47,6 +47,10 @@ public class BlockService {
         this.blockRepository.save(block);
     }
 
+    public Block getCurrentUserBlockByName(String blockName) {
+        return this.blockRepository.findByBlockNameAndUser(blockName, this.userService.getCurrentUser());
+    }
+
     public Long addBlockToDB(BlockDTO blockDTO, User user) {
         Block block = new Block();
         block.setBlockName(blockDTO.getBlockName());

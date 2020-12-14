@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.rafalpaprota.schedulerserver.dto.BlockDTO;
 import pl.rafalpaprota.schedulerserver.model.Event;
+import pl.rafalpaprota.schedulerserver.model.ExpiredEvent;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.EventRepository;
 import pl.rafalpaprota.schedulerserver.repositories.UserRepository;
@@ -67,14 +68,26 @@ public class DatabaseLoader implements CommandLineRunner {
             event.setUser(user);
             event.setExDate("");
             event.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
-            event.setStatusId(1);
-            event.setTypeId(1);
+            event.setStatusId(0);
+            event.setTypeId(10);
             event.setAllDay(false);
             event.setNotes("Witam");
             event.setTitle("Pierwszy event");
             event.setStartDate(LocalDateTime.now().withHour(10));
             event.setEndDate(LocalDateTime.now().withHour(11));
             this.eventRepository.save(event);
+
+            ExpiredEvent expiredEvent = new ExpiredEvent();
+            expiredEvent.setUser(user);
+            expiredEvent.setExDate("");
+            expiredEvent.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
+            expiredEvent.setStatusId(0);
+            expiredEvent.setTypeId(10);
+            expiredEvent.setAllDay(false);
+            expiredEvent.setNotes("Witam");
+            expiredEvent.setTitle("Testowa historia");
+            expiredEvent.setStartDate(LocalDateTime.now().withHour(10).minusDays(1));
+            expiredEvent.setEndDate(LocalDateTime.now().withHour(11).minusDays(1));
         }
     }
 }
