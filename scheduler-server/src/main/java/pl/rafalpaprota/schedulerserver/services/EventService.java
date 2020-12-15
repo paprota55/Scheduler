@@ -5,23 +5,30 @@ import org.springframework.stereotype.Service;
 import pl.rafalpaprota.schedulerserver.dto.EventDTO;
 import pl.rafalpaprota.schedulerserver.model.Block;
 import pl.rafalpaprota.schedulerserver.model.Event;
+import pl.rafalpaprota.schedulerserver.model.Settings;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.EventRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
     private final BlockService blockService;
+    private final SettingsService settingsService;
+    private final ExpiredEventsService expiredEventsService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserService userService, BlockService blockService) {
+    public EventService(EventRepository eventRepository, UserService userService, BlockService blockService, SettingsService settingsService, ExpiredEventsService expiredEventsService) {
         this.eventRepository = eventRepository;
         this.userService = userService;
         this.blockService = blockService;
+        this.settingsService = settingsService;
+        this.expiredEventsService = expiredEventsService;
     }
 
     public Long addNewEvent(EventDTO eventDTO) {
@@ -43,7 +50,7 @@ public class EventService {
     }
 
     public boolean checkIfExist(Long id) {
-        Event oldEvent = this.eventRepository.findById(id).get();
+        Optional<Event> oldEvent = this.eventRepository.findById(id);
         if (oldEvent != null) {
             return true;
         } else {
@@ -51,8 +58,21 @@ public class EventService {
         }
     }
 
+    public void moveEventsToExpiredEventsWhenReachArchiveTime() {
+        List<Event> eventList = this.eventRepository.findAllByUser(this.userService.getCurrentUser());
+        Settings settings = this.settingsService.getCurrentUserSettings();
+        for (Event event : eventList) {
+            if (event.getEndDate().isBefore(LocalDateTime.now().minusDays(settings.getTimeToArchive()))) {
+                this.expiredEventsService.addExpiredEvent(event);
+                this.eventRepository.delete(event);
+            }
+        }
+    }
+
     public Long changeEvent(EventDTO eventDTO) {
         Event oldEvent = this.eventRepository.findById(eventDTO.getId()).get();
+        System.out.println(oldEvent);
+        System.out.println(eventDTO);
         boolean edited = false;
         boolean moved = false;
         if (!oldEvent.getStartDate().isEqual(eventDTO.getStartDate().plusHours(1)) || !oldEvent.getEndDate().isEqual(eventDTO.getEndDate().plusHours(1)) || !oldEvent.getAllDay().equals(eventDTO.getAllDay())) {
@@ -88,7 +108,7 @@ public class EventService {
     }
 
 
-    public List<EventDTO> getCurrentUserEvents() {
+    public List<EventDTO> getCurrentUserEventsDTO() {
         User user = this.userService.getCurrentUser();
         List<Event> eventArrayList = this.eventRepository.findAllByUser(user);
         ArrayList<EventDTO> eventDTOArrayList = new ArrayList<>();

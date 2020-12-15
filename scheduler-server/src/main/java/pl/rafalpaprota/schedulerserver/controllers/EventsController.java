@@ -25,7 +25,6 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.POST, value = "api/events/addEvent")
     public ResponseEntity<?> addEvent(@RequestBody EventDTO eventDTO) {
-        System.out.println("Dodajemy czika");
         if (eventDTO.getStartDate().isBefore(eventDTO.getEndDate())) {
             return ResponseEntity.ok(this.eventService.addNewEvent(eventDTO));
         } else {
@@ -35,7 +34,6 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "api/events/changeEvent/{id}")
     public ResponseEntity<?> changeEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
-        System.out.println("Edytujemy czika");
         if (this.eventService.checkIfExist(id)) {
             if (eventDTO.getStartDate().isBefore(eventDTO.getEndDate())) {
                 return ResponseEntity.ok(this.eventService.changeEvent(eventDTO));
@@ -49,13 +47,13 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.GET, value = "api/events/getEvents")
     public ResponseEntity<?> getCurrentUserEvents() {
-        return ResponseEntity.ok(this.eventService.getCurrentUserEvents());
+        return ResponseEntity.ok(this.eventService.getCurrentUserEventsDTO());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "api/events/getEvents/{blockName}")
     public ResponseEntity<?> getCurrentUserEventsWhereBlockName(@PathVariable String blockName) {
         if (blockName.equals("all")) {
-            return ResponseEntity.ok(this.eventService.getCurrentUserEvents());
+            return ResponseEntity.ok(this.eventService.getCurrentUserEventsDTO());
         } else {
             Block block = this.blockService.getCurrentUserBlockByName(blockName);
             if (block == null) {
@@ -74,7 +72,6 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "api/events/deleteEvent/{eventId}")
     public ResponseEntity<?> deleteUserBlock(@PathVariable final Long eventId) {
-        System.out.println("Usuwamy czika");
         if (eventId != null) {
             if (this.eventService.checkIfEventIsThisUser(eventId)) {
                 this.eventService.deleteEvent(eventId);

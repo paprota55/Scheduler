@@ -12,7 +12,7 @@ public class SettingsService {
     private final SettingsRepository settingsRepository;
     private final UserService userService;
     private Integer defaultTime = 14;
-    private Integer maximumTime = 99;
+    private Integer maximumTime = 999;
     private Integer minimumTime = 0;
 
     @Autowired
@@ -37,7 +37,7 @@ public class SettingsService {
         User user = this.userService.getCurrentUser();
         return this.settingsRepository.findByUser(user);
     }
-
+    
     public Long changeSettings(SettingsDTO settingsDTO, Settings settings) {
         if (settingsDTO.getNewTime() != null) {
             if (settingsDTO.getNewTime() > this.maximumTime) {

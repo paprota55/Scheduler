@@ -13,6 +13,7 @@ import pl.rafalpaprota.schedulerserver.dto.AuthenticationResponse;
 import pl.rafalpaprota.schedulerserver.dto.LogRegUserDTO;
 import pl.rafalpaprota.schedulerserver.model.Settings;
 import pl.rafalpaprota.schedulerserver.model.User;
+import pl.rafalpaprota.schedulerserver.services.EventService;
 import pl.rafalpaprota.schedulerserver.services.SettingsService;
 import pl.rafalpaprota.schedulerserver.services.UserService;
 import pl.rafalpaprota.schedulerserver.util.JwtUtil;
@@ -30,12 +31,15 @@ public class AccountController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final EventService eventService;
+
     @Autowired
-    public AccountController(UserService userService, SettingsService settingsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AccountController(UserService userService, SettingsService settingsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager, EventService eventService) {
         this.userService = userService;
         this.settingsService = settingsService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
+        this.eventService = eventService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "login")
@@ -57,6 +61,7 @@ public class AccountController {
 
         final String role;
 
+        this.eventService.moveEventsToExpiredEventsWhenReachArchiveTime();
         role = user.getRole().getName();
 
         return ResponseEntity.ok(new AuthenticationResponse(token, role));

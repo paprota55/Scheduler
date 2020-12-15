@@ -22,6 +22,6 @@ public class ExpiredEventsController {
 
     @RequestMapping(method = RequestMethod.GET, value = "api/expiredEvents/getEvents")
     public ResponseEntity<?> getCurrentUserEvents() {
-        return ResponseEntity.ok(this.expiredEventsService.getCurrentUserExpiredEvents());
+        return ResponseEntity.ok(this.expiredEventsService.getCurrentUserExpiredEventsDTO());
     }
 }

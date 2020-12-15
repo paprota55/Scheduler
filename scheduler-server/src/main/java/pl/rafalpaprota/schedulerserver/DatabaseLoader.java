@@ -10,6 +10,7 @@ import pl.rafalpaprota.schedulerserver.model.Event;
 import pl.rafalpaprota.schedulerserver.model.ExpiredEvent;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.EventRepository;
+import pl.rafalpaprota.schedulerserver.repositories.ExpiredEventRepository;
 import pl.rafalpaprota.schedulerserver.repositories.UserRepository;
 import pl.rafalpaprota.schedulerserver.services.*;
 
@@ -26,6 +27,7 @@ public class DatabaseLoader implements CommandLineRunner {
     private final BlockService blockService;
     private final EventService eventService;
     private final EventRepository eventRepository;
+    private final ExpiredEventRepository expiredEventRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -34,7 +36,7 @@ public class DatabaseLoader implements CommandLineRunner {
     private String dataBase;
 
     @Autowired
-    public DatabaseLoader(UserService userService, UserRepository userRepository, RoleService roleService, SettingsService settingsService, BlockService blockService, EventService eventService, EventRepository eventRepository) {
+    public DatabaseLoader(UserService userService, UserRepository userRepository, RoleService roleService, SettingsService settingsService, BlockService blockService, EventService eventService, EventRepository eventRepository, ExpiredEventRepository expiredEventRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.roleService = roleService;
@@ -43,6 +45,7 @@ public class DatabaseLoader implements CommandLineRunner {
         this.eventService = eventService;
 
         this.eventRepository = eventRepository;
+        this.expiredEventRepository = expiredEventRepository;
     }
 
     @Override
@@ -69,7 +72,7 @@ public class DatabaseLoader implements CommandLineRunner {
             event.setExDate("");
             event.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
             event.setStatusId(0);
-            event.setTypeId(10);
+            event.setTypeId(12);
             event.setAllDay(false);
             event.setNotes("Witam");
             event.setTitle("Pierwszy event");
@@ -82,12 +85,13 @@ public class DatabaseLoader implements CommandLineRunner {
             expiredEvent.setExDate("");
             expiredEvent.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
             expiredEvent.setStatusId(0);
-            expiredEvent.setTypeId(10);
+            expiredEvent.setTypeId(12);
             expiredEvent.setAllDay(false);
             expiredEvent.setNotes("Witam");
             expiredEvent.setTitle("Testowa historia");
             expiredEvent.setStartDate(LocalDateTime.now().withHour(10).minusDays(1));
             expiredEvent.setEndDate(LocalDateTime.now().withHour(11).minusDays(1));
+            this.expiredEventRepository.save(expiredEvent);
         }
     }
 }
