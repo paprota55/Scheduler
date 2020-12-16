@@ -76,7 +76,6 @@ public class AccountController {
         } else {
             User newUser = this.userService.addUserByUserDTO(userDTO);
             Settings settings = this.settingsService.createNewSettings(newUser);
-            this.userService.addUser(newUser);
             return ResponseEntity.ok("Konto zostało utworzone");
         }
     }

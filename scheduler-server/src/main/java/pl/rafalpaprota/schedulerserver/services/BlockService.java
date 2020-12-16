@@ -41,9 +41,7 @@ public class BlockService {
         Block block = this.blockRepository.findByBlockNameAndUser(blockDTO.getBlockName(), user);
         block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0));
         block.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0));
-        System.out.println(block.getBlockName());
-        System.out.println(block.getDateTo());
-        System.out.println(block.getDateFrom());
+        block.setNotes(blockDTO.getNotes());
         this.blockRepository.save(block);
     }
 
@@ -56,9 +54,15 @@ public class BlockService {
         block.setBlockName(blockDTO.getBlockName());
         block.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0));
         block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0));
+        block.setNotes(blockDTO.getNotes());
         block.setUser(user);
 
         return this.blockRepository.save(block).getId();
+    }
+
+    //TODO zrób to
+    public boolean checkIfBlockInDatesExistInCurrentUser(BlockDTO blockDTO, User user) {
+        return true;
     }
 
     public void deleteBlockFromDB(String blockName, User user) {
@@ -74,7 +78,7 @@ public class BlockService {
         ArrayList<Block> blockList = sortBlockList((ArrayList<Block>) this.blockRepository.findAllByUser(user));
         ArrayList<BlockDisplayDTO> blockDTOList = new ArrayList<>();
         for (Block current : blockList) {
-            blockDTOList.add(new BlockDisplayDTO(current.getBlockName(), current.getDateFrom(), current.getDateTo()));
+            blockDTOList.add(new BlockDisplayDTO(current.getBlockName(), current.getDateFrom(), current.getDateTo(), current.getNotes()));
         }
         return blockDTOList;
     }

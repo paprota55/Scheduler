@@ -22,6 +22,9 @@ public class Block {
     @Column(nullable = false)
     private LocalDateTime dateTo;
 
+    @Column
+    private String notes;
+
     @Column(nullable = false)
     private String blockName;
 }

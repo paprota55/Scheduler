@@ -44,8 +44,6 @@ public class EventService {
         newEvent.setRRule(eventDTO.getRRule());
         newEvent.setExDate(eventDTO.getExDate());
         newEvent.setUser(this.userService.getCurrentUser());
-        System.out.println(newEvent);
-        System.out.println(eventDTO);
         return this.eventRepository.save(newEvent).getId();
     }
 
@@ -71,11 +69,11 @@ public class EventService {
 
     public Long changeEvent(EventDTO eventDTO) {
         Event oldEvent = this.eventRepository.findById(eventDTO.getId()).get();
-        System.out.println(oldEvent);
-        System.out.println(eventDTO);
         boolean edited = false;
         boolean moved = false;
-        if (!oldEvent.getStartDate().isEqual(eventDTO.getStartDate().plusHours(1)) || !oldEvent.getEndDate().isEqual(eventDTO.getEndDate().plusHours(1)) || !oldEvent.getAllDay().equals(eventDTO.getAllDay())) {
+        if (!oldEvent.getStartDate().isEqual(eventDTO.getStartDate())
+                || !oldEvent.getEndDate().isEqual(eventDTO.getEndDate())
+                || !oldEvent.getAllDay().equals(eventDTO.getAllDay())) {
             moved = true;
             if (oldEvent.getExDate().equals(eventDTO.getExDate())) {
                 oldEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
@@ -98,7 +96,11 @@ public class EventService {
             oldEvent.setStatusId(2);
         }
         oldEvent.setAllDay(eventDTO.getAllDay());
-        oldEvent.setTitle(eventDTO.getTitle());
+        if (oldEvent.getTitle() == null && eventDTO.getTitle() == null) {
+            oldEvent.setTitle("");
+        } else {
+            oldEvent.setTitle(eventDTO.getTitle());
+        }
         oldEvent.setNotes(eventDTO.getNotes());
         oldEvent.setTypeId(eventDTO.getTypeId());
         oldEvent.setRRule(eventDTO.getRRule());

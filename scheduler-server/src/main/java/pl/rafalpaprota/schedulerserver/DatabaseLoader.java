@@ -64,13 +64,13 @@ public class DatabaseLoader implements CommandLineRunner {
             Long id = this.userService.addUser(user);
             user = this.userRepository.findById(id).get();
             this.settingsService.createNewSettings(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(0)), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(0), "Notka"), user);
             this.userService.addUser(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(0)), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(0), "Druga"), user);
             Event event = new Event();
             event.setUser(user);
             event.setExDate("");
-            event.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
+            event.setRRule("INTERVAL=1;FREQ=DAILY;COUNT=30");
             event.setStatusId(0);
             event.setTypeId(12);
             event.setAllDay(false);
@@ -83,7 +83,7 @@ public class DatabaseLoader implements CommandLineRunner {
             ExpiredEvent expiredEvent = new ExpiredEvent();
             expiredEvent.setUser(user);
             expiredEvent.setExDate("");
-            expiredEvent.setRRule("RRULE:INTERVAL=1;FREQ=DAILY;COUNT=30");
+            expiredEvent.setRRule("INTERVAL=1;FREQ=DAILY;COUNT=30");
             expiredEvent.setStatusId(0);
             expiredEvent.setTypeId(12);
             expiredEvent.setAllDay(false);

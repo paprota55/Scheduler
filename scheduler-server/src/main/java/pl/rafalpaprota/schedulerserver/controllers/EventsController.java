@@ -66,7 +66,6 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.GET, value = "api/events/getEvents/block/{blockName}")
     public ResponseEntity<?> getCurrentUserEventsByBlock(@PathVariable String blockName) {
-        System.out.println(blockName);
         return ResponseEntity.ok(this.eventService.getCurrentUserEventsByBlock(blockName));
     }
 

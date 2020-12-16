@@ -42,4 +42,6 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+
+    //TODO daj tutaj wyliczoną datę zakończenia
 }

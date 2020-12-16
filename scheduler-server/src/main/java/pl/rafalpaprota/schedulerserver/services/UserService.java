@@ -56,8 +56,6 @@ public class UserService {
         final String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_.@#$%^&+=])(?=\\S+$).{8,}";
         final Pattern pattern = Pattern.compile(regex);
         final Matcher matcher = pattern.matcher(password);
-        System.out.println(matcher.matches());
-        System.out.println(password);
         if (matcher.matches()) {
             user.setPassword(this.passwordEncoder.encode(password));
             this.userRepository.save(user);
