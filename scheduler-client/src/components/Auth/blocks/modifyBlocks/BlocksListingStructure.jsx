@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BlockAdd from "./BlockAdd";
 import { addBlock } from "../../../../features/blocks/blocksSlice";
 import { fetchEvents, setBlockNameInSlice } from "../../../../features/scheduler/schedulerSlice";
+import { blockPageMessages } from "../../../../languages/plLanguage"
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -30,6 +31,7 @@ const BlocksListingStructure = () => {
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
   const [blockName, setBlockName] = useState("");
+  const [notes, setNotes] = useState("dodajemy");
 
   const btnHandlerBack = () => {
     setOpen(false);
@@ -50,6 +52,7 @@ const BlocksListingStructure = () => {
       blockName: blockName,
       dateFrom: dateFrom,
       dateTo: dateTo,
+      notes: notes,
     };
     dispatch(addBlock(block, alert));
   };
@@ -69,15 +72,16 @@ const BlocksListingStructure = () => {
     >
       <div style={{ textAlign: "center", width: "100%" }}>
         <div style={{ marginTop: "3vh" }}>
-          <p style={{ fontSize: "25px", fontWeight: "bold" }}>Twoje bloki</p>
+          <p style={{ fontSize: "25px", fontWeight: "bold" }}>{blockPageMessages.yourBlocksLabel}</p>
         </div>
         <Table striped bordered hover size="sm" style={{ marginTop: "3vh" }}>
           <thead>
             <tr>
-              <th>Lp</th>
-              <th>Nazwa</th>
-              <th>Data od</th>
-              <th>Data do</th>
+              <th>{blockPageMessages.tableHeaderFirst}</th>
+              <th>{blockPageMessages.tableHeaderName}</th>
+              <th>{blockPageMessages.tableHeaderNotes}</th>
+              <th>{blockPageMessages.tableHeaderStartDate}</th>
+              <th>{blockPageMessages.tableHeaderEndDate}</th>
             </tr>
           </thead>
           <tbody>
@@ -87,10 +91,10 @@ const BlocksListingStructure = () => {
           </tbody>
         </Table>
         <Button variant="outlined" color="secondary" onClick={handleToggle}>
-          Dodaj
+          {blockPageMessages.addButtonLabel}
         </Button>
         <Button variant="outlined" color="primary" onClick={loadData}>
-          Załaduj pełny
+          {blockPageMessages.loadAllButtonLabel}
         </Button>
       </div>
       <Backdrop className={classes.backdrop} open={open}>
@@ -98,9 +102,11 @@ const BlocksListingStructure = () => {
           btnHandler={handleBlockAdded}
           btnHandlerBack={btnHandlerBack}
           blockName={blockName}
+          notes = {notes}
           dateFrom={dateFrom}
           dateTo={dateTo}
           setBlockName={setBlockName}
+          setNotes = {setNotes}
           setDateFrom={setDateFrom}
           setDateTo={setDateTo}
         />

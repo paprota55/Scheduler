@@ -20,21 +20,31 @@ import {
   ConfirmationDialog,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
-import { types } from "./Types";
-import { status } from "./Status";
+import { types } from "../schedulerCommons/Types";
+import { status } from "../schedulerCommons/Status";
 import {
   editRecurrenceMessages,
   appointmentFormMessages,
   confirmationDialogMessages,
   todayButtonMessages,
   allDayLocalizationMessages,
-} from "./pl";
+} from "../../../languages/plLanguage";
 
 const getAppointmentFormMessages = (locale) => appointmentFormMessages[locale];
 const getConfirmationDialogMessages = (locale) => confirmationDialogMessages[locale];
 const getAllDayMessages = (locale) => allDayLocalizationMessages[locale];
 const getTodayButtonMessages = (locale) => todayButtonMessages[locale];
 const getEditRecurrenceMessages = (locale) => editRecurrenceMessages[locale];
+
+const DateEditor = ({ excludeTime, ...restProps }) => {
+
+  return (
+    <AppointmentForm.DateEditor
+      {...restProps}
+      excludeTime={excludeTime}
+    />
+  );
+};
 
 export default class Calendar extends React.PureComponent {
   constructor(props) {
@@ -85,21 +95,21 @@ export default class Calendar extends React.PureComponent {
 
   commitChanges({ added, changed, deleted }) {
     if (added) {
-      console.log("Wszedlem do added");
-      console.log(added);
+      if(added.title === undefined){
+        added.title = 'Nowy';
+      }
       this.props.addNewEventt({
         allDay: false,
-        notes: "",
-        rRule: "",
-        typeId: 9,
-        exDate: "",
+        notes: '',
+        rRule: '',
+        typeId: 12,
+        exDate: '',
         ...added,
         statusId: 0,
       });
+      console.log(added);
     }
     if (changed) {
-      console.log("Wszedlem do changed");
-      console.log(changed);
       this.props.events.map((appointment) =>
         changed[appointment.id]
           ? this.props.changeOldEvent({
@@ -130,8 +140,6 @@ export default class Calendar extends React.PureComponent {
           data={this.props.events}
           height={"100%"}
           locale={locale}
-          recurrenceRuleExpr="rRule"
-          recurrenceExceptionExpr="exDate"
         >
           <ViewState
             currentDate={currentDate}
@@ -165,7 +173,7 @@ export default class Calendar extends React.PureComponent {
           />
           <Appointments />
           <AppointmentTooltip showOpenButton showDeleteButton />
-          <AppointmentForm messages={getAppointmentFormMessages(locale)} />
+          <AppointmentForm dateEditorComponent={DateEditor} messages={getAppointmentFormMessages(locale)} locale ={locale}/>
           <AllDayPanel messages={getAllDayMessages(locale)} />
           <DragDropProvider />
           <Resources data={resources} mainResourceName="typeId" />

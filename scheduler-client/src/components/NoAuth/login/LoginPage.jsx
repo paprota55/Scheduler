@@ -5,6 +5,9 @@ import {
   ImageContainer,
 } from "../../../styles/styles.style";
 import Login from "./Login";
+import {
+  loginPageMessages
+} from "../../../languages/plLanguage";
 
 const LoginPage = () => {
   return (
@@ -21,9 +24,7 @@ const LoginPage = () => {
                 width: "45vw",
               }}
             >
-              Witamy w aplikacji do zarządzania własnym planem zajęć. <br />
-              Dzięki naszemu produktowi, będziesz mógł w prosty oraz efektywny
-              sposób poradzić sobie z ułożeniem swojego planu zajęć.
+              {loginPageMessages.leftSideTextLabel}
             </a>
             <Login />
           </Container>

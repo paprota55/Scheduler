@@ -4,7 +4,7 @@ import ChangeEmail from "./ChangeEmail";
 import ChangePassword from "./ChangePassword";
 import ChangeArchivingTime from "./ChangeArchivingTime";
 import ChangeHeader from "./ChangeHeader";
-
+import { userSettingsPageMessages } from "../../../languages/plLanguage"
 
 
 const AccountSettings = () => {
@@ -36,10 +36,10 @@ const AccountSettings = () => {
       <Paper style={{ padding: "8px", height: "50vh", width: "100vh" }}>
         <Paper style={{ padding: "4px" }}>
           <Grid container justify="space-around" alignItems="center">
-            <Button onClick={() => setFormId(1)}>Zmień email</Button>
-            <Button onClick={() => setFormId(2)}>Zmień hasło</Button>
+            <Button onClick={() => setFormId(1)}>{userSettingsPageMessages.changeEmailHeaderLabel}</Button>
+            <Button onClick={() => setFormId(2)}>{userSettingsPageMessages.changePasswordHeaderLabel}</Button>
             <Button onClick={() => setFormId(3)}>
-              Zmień czas archiwizacji
+              {userSettingsPageMessages.changeArchieveTimeHeaderLabel}
             </Button>
           </Grid>
         </Paper>

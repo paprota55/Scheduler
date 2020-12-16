@@ -1,4 +1,4 @@
-import { teal, indigo, green, cyan, blue, yellow, orange, red, lime, pink } from "@material-ui/core/colors/";
+import { teal, indigo, green, cyan, blue, yellow, orange, red, lime, pink, amber, deepPurple } from "@material-ui/core/colors/";
 
 export const types = [
   {
@@ -47,8 +47,18 @@ export const types = [
     color: indigo,
   },
   {
-    text: "Inne",
+    text: "Konsultacje",
     id: 10,
+    color: amber,
+  },
+  {
+    text: "Czas własny",
+    id: 11,
+    color: deepPurple,
+  },
+  {
+    text: "Inne",
+    id: 12,
     color: lime,
   },
 ];

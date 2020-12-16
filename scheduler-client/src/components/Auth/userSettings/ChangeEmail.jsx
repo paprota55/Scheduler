@@ -11,6 +11,7 @@ import {
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
+import { userSettingsPageMessages } from "../../../languages/plLanguage"
 
 const useStyles = makeStyles({
   box: {
@@ -66,7 +67,7 @@ const ChangeEmail = () => {
         alignItems="center"
       >
         <Typography className={classes.title} variant="h1">
-          Zmień adres email
+          {userSettingsPageMessages.changeButtonLabel}
         </Typography>
         <TextValidator
           onChange={(event) => dispatch(setNewEmail(event.target.value))}
@@ -74,12 +75,12 @@ const ChangeEmail = () => {
           margin="normal"
           variant="outlined"
           className={classes.textField}
-          label="Nowy adres email"
+          label={userSettingsPageMessages.newEmailLabel}
           type="email"
           validators={["required", "isEmail"]}
           errorMessages={[
-            "Pole jest wymagane.",
-            "Email nie spełnia kryteriów.",
+            userSettingsPageMessages.fieldIsRequiredLabel,
+            userSettingsPageMessages.emailIsNotValid,
           ]}
         />
         <TextValidator
@@ -88,13 +89,13 @@ const ChangeEmail = () => {
           value={password}
           margin="normal"
           variant="outlined"
-          label="Aktualne hasło"
+          label={userSettingsPageMessages.actualPasswordLabel}
           type="password"
           validators={["required"]}
-          errorMessages={["this field is required"]}
+          errorMessages={[userSettingsPageMessages.fieldIsRequiredLabel]}
         />
         <Button color="primary" variant="contained" type="submit">
-          Zmień
+          {userSettingsPageMessages.changeButtonLabel}
         </Button>
         {showResult && showAlert()}
       </Grid>

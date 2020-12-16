@@ -8,6 +8,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import plLocale from "date-fns/locale/pl";
+import {blockPageMessages} from "../../../../languages/plLanguage"
 
 const BlocksModify = ({
   btnHandler,
@@ -26,7 +27,7 @@ const BlocksModify = ({
       <Grid container spacing={1} justify="center" alignContent="center">
         <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
           <p style={{ fontWeight: "bold", fontSize: "25px" }}>
-            Aktualnie modyfikujesz {block.blockName}
+            {blockPageMessages.actuallyModifiedLabel} {block.blockName}
           </p>
         </Grid>
         <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
@@ -34,11 +35,11 @@ const BlocksModify = ({
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
-              helperText="Podaj prawidłowy format"
+              helperText={blockPageMessages.helperDateLabel}
               format="dd-MM-yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Data od"
+              label={blockPageMessages.dateStartLabel}
               value={dateFrom}
               onChange={date => setDateFrom(date)}
               KeyboardButtonProps={{
@@ -52,11 +53,11 @@ const BlocksModify = ({
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
-              helperText="Podaj prawidłowy format"
+              helperText={blockPageMessages.helperDateLabel}
               format="dd-MM-yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Data do"
+              label={blockPageMessages.dateEndLabel}
               value={dateTo}
               onChange={date => setDateTo(date)}
               KeyboardButtonProps={{
@@ -67,12 +68,12 @@ const BlocksModify = ({
         </Grid>
         <Grid xs={6} item>
           <Button onClick={btnHandler} variant="contained" color="secondary">
-            Modyfikuj
+            {blockPageMessages.modifyButtonLabel}
           </Button>
         </Grid>
         <Grid xs={6} item>
           <Button onClick={btnHandlerBack} variant="contained" color="primary">
-            Anuluj
+            {blockPageMessages.cancelButtonLabel}
           </Button>
         </Grid>
       </Grid>

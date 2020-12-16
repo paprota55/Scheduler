@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Grid,
-  Typography,
-  Paper,
-} from "@material-ui/core";
+import { Grid, Typography, Paper } from "@material-ui/core";
 import {
   Container,
   ShadowContainer,
@@ -25,6 +21,7 @@ import { ValidatorForm } from "react-material-ui-form-validator";
 import FormControlPanel from "./FormControlPanel";
 import UsersLogin from "./UsersLogin";
 import UsersPassword from "./UsersPassword";
+import { registerPageMessages } from "../../../languages/plLanguage";
 
 const RegisterPage = () => {
   const classes = useStyles();
@@ -76,7 +73,7 @@ const RegisterPage = () => {
   return (
     <ImageContainer img>
       <ShadowContainer shadow="0.4">
-        <Container col height="100vh" >
+        <Container col height="100vh">
           <Grid container justify="center" alignItems="center">
             <ValidatorForm onSubmit={submit}>
               <Grid
@@ -89,7 +86,9 @@ const RegisterPage = () => {
               >
                 <Paper elevation={6} className={classes.paper}>
                   <Grid className={classes.content}>
-                  <Typography className = {classes.title}>Rejestracja</Typography>
+                    <Typography className={classes.title}>
+                      {registerPageMessages.registerTitle}
+                    </Typography>
                     <UsersLogin
                       email={email}
                       login={login}
@@ -102,15 +101,13 @@ const RegisterPage = () => {
                       handlePasswordChange={handlePasswordChange}
                       handleRePasswordChange={handleRePasswordChange}
                     />
-                    <FormControlPanel
-                      showSuccess={showSuccess}
-                    />
+                    <FormControlPanel showSuccess={showSuccess} />
                   </Grid>
                 </Paper>
               </Grid>
             </ValidatorForm>
           </Grid>
-          </Container>
+        </Container>
       </ShadowContainer>
     </ImageContainer>
   );

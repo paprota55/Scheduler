@@ -35,6 +35,7 @@ export const fetchBlocks = () => async (dispatch) => {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     });
+    console.log(response.data);
     dispatch(setBlocks(response.data));
   } catch (error) {
     console.log(error);

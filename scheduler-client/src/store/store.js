@@ -7,6 +7,7 @@ import userArchiveSettingsReducer from "../features/userSettings/userArchiveSett
 import userHeaderSettingsReducer from "../features/userSettings/userHeaderSettingsSlice";
 import blocksReducer from "../features/blocks/blocksSlice";
 import schedulerReducer from "../features/scheduler/schedulerSlice";
+import schedulerHistoryReducer from "../features/schedulerHistory/schedulerHistorySlice";
 
 export default configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
         userHeaderSettings: userHeaderSettingsReducer,
         blocks: blocksReducer,
         scheduler: schedulerReducer,
+        schedulerHistory: schedulerHistoryReducer,
     },
 });

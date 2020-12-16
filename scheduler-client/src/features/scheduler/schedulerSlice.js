@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import serverIP from "../../config"
 
 const API_URL = serverIP;
@@ -40,7 +39,6 @@ export const fetchEvents = (alert) => async (dispatch) => {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      console.log(response.data);
       dispatch(setEvents(response.data));
       alert.success("Dane zostały załadowane.");
     } catch (error) {
@@ -49,7 +47,6 @@ export const fetchEvents = (alert) => async (dispatch) => {
   };
 
   export const fetchEventsByBlock = (blockName ,alert) => async (dispatch) => {
-    console.log(`api/events/getEvents/block/${blockName}`);
     try {
       const response = await axios.get(API_URL + `api/events/getEvents/block/${blockName}`,{
         headers: {
@@ -66,14 +63,13 @@ export const fetchEvents = (alert) => async (dispatch) => {
 
 
   export const addEvent = (addEvent,blockName, alert) => async (dispatch) => {
-    console.log(blockName);
     try {
       await axios.post(API_URL + AddEvent, addEvent, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      alert.success("Event został dodany");
+      alert.success("Wydarzenie zostało utworzone.");
       dispatch(fetchCurrentData(blockName, alert));
     } catch (error) {
       if(error.response.status === 400){
@@ -122,7 +118,6 @@ export const fetchEvents = (alert) => async (dispatch) => {
 }
 
   export const fetchCurrentData = (blockName, alert) => async (dispatch) => {
-    console.log(blockName);
       try{
         const response = await axios.get(API_URL + `api/events/getEvents/${blockName}`, {
           headers: {
@@ -130,6 +125,7 @@ export const fetchEvents = (alert) => async (dispatch) => {
           },
         });
         dispatch(setEvents(response.data));
+        console.log(response.data);
       } catch(error){
         alert.error("Serwer nie odpowiada.");
       }

@@ -11,6 +11,7 @@ import {
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
+import { userSettingsPageMessages } from "../../../languages/plLanguage"
 
 const useStyles = makeStyles({
   box: {
@@ -42,7 +43,7 @@ const ChangeArchiveTime = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(stopDisplayingResults());
-    }, 300);
+    }, 3000);
     return () => {
       if (showResult === true) return clearTimeout(timer);
     };
@@ -66,7 +67,7 @@ const ChangeArchiveTime = () => {
         alignItems="center"
       >
         <Typography className={classes.title} variant="h1">
-          <a>Zmiana czasu archiwizowania</a>
+          <a>{userSettingsPageMessages.timeChangeDescribeLabel}</a>
         </Typography>
         <TextValidator
           onChange={(event) => dispatch(setNewTime(event.target.value))}
@@ -74,10 +75,10 @@ const ChangeArchiveTime = () => {
           margin="normal"
           variant="outlined"
           className={classes.textField}
-          label="Podaj ilość dni do archiwizacji (np. 9)"
+          label={userSettingsPageMessages.numbersOfDayPlaceHolder}
           type="number"
           validators={["required", "matchRegexp:^[0-9]{1,3}$"]}
-          errorMessages={["To pole jest wymagane", "Podaj liczbę od 0 do 999"]}
+          errorMessages={[userSettingsPageMessages.fieldIsRequiredLabel, userSettingsPageMessages.numbersOfDaysErrorMessage]}
         />
         <TextValidator
           className={classes.textField}
@@ -85,14 +86,14 @@ const ChangeArchiveTime = () => {
           value={password}
           margin="normal"
           variant="outlined"
-          label="Aktualne hasło"
+          label={userSettingsPageMessages.actualPasswordLabel}
           type="password"
           validators={["required"]}
-          errorMessages={["To pole jest wymagane"]}
+          errorMessages={[userSettingsPageMessages.fieldIsRequiredLabel]}
         />
 
         <Button color="primary" variant="contained" type="submit">
-          Zmień
+          {userSettingsPageMessages.changeButtonLabel}
         </Button>
         {showResult && showAlert()}
       </Grid>

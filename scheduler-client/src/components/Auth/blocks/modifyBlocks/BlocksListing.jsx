@@ -12,6 +12,7 @@ import {
 } from "../../../../features/blocks/blocksSlice";
 import BlockModify from "./BlockModify";
 import { fetchEventsByBlock, setBlockNameInSlice } from "../../../../features/scheduler/schedulerSlice";
+import { blockPageMessages } from "../../../../languages/plLanguage"
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -78,21 +79,22 @@ const BlocksListing = ({ info, index }) => {
       <tr style={{ width: "100%" }}>
         <td style={{ width: "3%" }}>{index + 1}</td>
         <td className={classes.row}>{info.blockName}</td>
+        <td className={classes.row}>{info.notes} </td>
         <td className={classes.row}>{info.dateFrom}</td>
         <td className={classes.row}>{info.dateTo} </td>
         <td>
           <Button variant="outlined" color="primary" onClick={handleToggle3}>
-            Załaduj
+            {blockPageMessages.loadButtonLabel}
           </Button>
         </td>
         <td>
           <Button variant="outlined" color="primary" onClick={handleToggle1}>
-            Zmień
+            {blockPageMessages.changeButtonLabel}
           </Button>
         </td>
         <td>
           <Button variant="outlined" color="primary" onClick={handleToggle2}>
-            Usuń
+            {blockPageMessages.deleteButtonLabel}
           </Button>
         </td>
       </tr>

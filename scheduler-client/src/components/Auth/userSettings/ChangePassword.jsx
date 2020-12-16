@@ -11,6 +11,7 @@ import {
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
+import { userSettingsPageMessages } from "../../../languages/plLanguage"
 
 const useStyles = makeStyles({
   box: {
@@ -42,7 +43,7 @@ const ChangePassword = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(stopDisplayingResults());
-    }, 300);
+    }, [3000]);
     return () => {
       if (showResult === true) return clearTimeout(timer);
     };
@@ -66,7 +67,7 @@ const ChangePassword = () => {
         alignItems="center"
       >
         <Typography className={classes.title} variant="h1">
-          Zmiana hasła
+        {userSettingsPageMessages.changePasswordLabel}
         </Typography>
 
         <TextValidator
@@ -75,13 +76,13 @@ const ChangePassword = () => {
           margin="normal"
           variant="outlined"
           className={classes.textField}
-          label="Nowe hasło"
+          label= {userSettingsPageMessages.newPasswordLabel}
           type="password"
           validators={[
             "required",
             "matchRegexp:^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$",
           ]}
-          errorMessages={["To pole jest wymagane", "Hasło jest niepoprawne"]}
+          errorMessages={[userSettingsPageMessages.fieldIsRequiredLabel, userSettingsPageMessages.passwordIsWrongMessage]}
         />
         <TextValidator
           className={classes.textField}
@@ -89,13 +90,13 @@ const ChangePassword = () => {
           value={password}
           margin="normal"
           variant="outlined"
-          label="Aktualne hasło"
+          label={userSettingsPageMessages.actualPasswordLabel}
           type="password"
           validators={["required"]}
-          errorMessages={["To pole jest wymagane"]}
+          errorMessages={[userSettingsPageMessages.fieldIsRequiredLabel]}
         />
         <Button color="primary" variant="contained" type="submit">
-          Zmień
+          {userSettingsPageMessages.changeButtonLabel}
         </Button>
         {showResult && showAlert()}
       </Grid>

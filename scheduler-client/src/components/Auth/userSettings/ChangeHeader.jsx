@@ -5,9 +5,7 @@ import {
   fetchArchiveTime,
 } from "../../../features/userSettings/userHeaderSettingsSlice"
 import { useSelector, useDispatch } from "react-redux";
-
-const textToHeader = "Naciśnij odpowiedni przycisk na górze.";
-const timeText = "Obecny czas archiwizacji: ";
+import { userSettingsPageMessages } from "../../../languages/plLanguage"
 
 const ChangeHeader = () => {  
   const dispatch = useDispatch();
@@ -27,8 +25,8 @@ const ChangeHeader = () => {
     alignItems="center"
   >
     <Typography style={{ textAlign: "center" }} variant="h4">
-        <a>{textToHeader}</a><br/><br/>
-        <a>{timeText}{newTime + " dni"}</a>
+        <a>{userSettingsPageMessages.textToHeaderLabel}</a><br/><br/>
+        <a>{userSettingsPageMessages.timeTextLabel}{newTime + " dni"}</a>
     </Typography>
   </Grid>
   );

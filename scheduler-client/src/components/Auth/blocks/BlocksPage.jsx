@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import BlocksListingStructure from "./modifyBlocks/BlocksListingStructure";
 import BlockAdd from "./modifyBlocks/BlockAdd";
+import { blockPageMessages } from "../../../languages/plLanguage";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,8 +79,8 @@ const BlocksPage = () => {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Dodaj nowy blok" {...a11yProps(0)} />
-          <Tab label="Zarządzaj istniejącymi blokami" {...a11yProps(1)} />
+          <Tab label={blockPageMessages.addNewBlockLabel} {...a11yProps(0)} />
+          <Tab label={blockPageMessages.manageExistingBlocks} {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <SwipeableViews

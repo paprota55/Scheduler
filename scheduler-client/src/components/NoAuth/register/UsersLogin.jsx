@@ -2,13 +2,9 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { TextValidator } from "react-material-ui-form-validator";
 import useStyles from "./useStyles";
+import { registerPageMessages } from "../../../languages/plLanguage";
 
-const UsersLogin = ({
-  email,
-  login,
-  handleEmailChange,
-  handleLoginChange,
-}) => {
+const UsersLogin = ({ email, login, handleEmailChange, handleLoginChange }) => {
   const classes = useStyles();
 
   return (
@@ -19,19 +15,22 @@ const UsersLogin = ({
         value={login}
         type="login"
         name="login"
-        label="Login"
+        label={registerPageMessages.loginLabel}
         validators={["required"]}
-        errorMessages={["To pole jest wymagane"]}
+        errorMessages={[registerPageMessages.fieldIsRequiredLabel]}
       />
-        <TextValidator
+      <TextValidator
         className={classes.textArea}
-        label="Email"
+        label={registerPageMessages.emailLabel}
         onChange={handleEmailChange}
         value={email}
         name="email"
         type="email"
         validators={["required", "isEmail"]}
-        errorMessages={["To pole jest wymagane", "email jest nieprawidłowy"]}
+        errorMessages={[
+          registerPageMessages.fieldIsRequiredLabel,
+          registerPageMessages.emailIsNotValidLabel,
+        ]}
       />
     </Grid>
   );

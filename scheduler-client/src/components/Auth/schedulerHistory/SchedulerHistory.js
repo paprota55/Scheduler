@@ -1,6 +1,6 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper";
-import { ViewState } from "@devexpress/dx-react-scheduler";
+import { ViewState, EditingState } from "@devexpress/dx-react-scheduler";
 import {
   Scheduler,
   DayView,
@@ -11,20 +11,34 @@ import {
   TodayButton,
   DateNavigator,
   Resources,
+  EditRecurrenceMenu,
   AllDayPanel,
   Appointments,
   AppointmentForm,
+  AppointmentTooltip,
+  ConfirmationDialog,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
-import { appointments } from "../scheduler/appointments";
-import { types } from "../scheduler/Types";
-import { status } from "../scheduler/Status";
+import { types } from "../schedulerCommons/Types";
+import { status } from "../schedulerCommons/Status";
+import {
+  editRecurrenceMessages,
+  appointmentFormMessages,
+  confirmationDialogMessages,
+  todayButtonMessages,
+  allDayLocalizationMessages,
+} from "../../../languages/plLanguage";
+
+const getAppointmentFormMessages = (locale) => appointmentFormMessages[locale];
+const getConfirmationDialogMessages = (locale) => confirmationDialogMessages[locale];
+const getAllDayMessages = (locale) => allDayLocalizationMessages[locale];
+const getTodayButtonMessages = (locale) => todayButtonMessages[locale];
+const getEditRecurrenceMessages = (locale) => editRecurrenceMessages[locale];
 
 export default class CalendarHistory extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: appointments,
       resources: [
         {
           fieldName: "typeId",
@@ -39,6 +53,8 @@ export default class CalendarHistory extends React.PureComponent {
           allowMultiple: false,
         },
       ],
+
+      locale: "pl",
       currentDate: new Date(),
     };
 
@@ -50,28 +66,44 @@ export default class CalendarHistory extends React.PureComponent {
   render() {
     const {
       currentDate,
-      data,
       resources,
+      locale,
     } = this.state;
 
     return (
       <Paper style={{ height: "91vh", justifyContent: "center" }}>
-        <Scheduler data={data} height={"100%"} locale={"pl"}>
+        <Scheduler
+          data={this.props.events}
+          height={"100%"}
+          locale={locale}
+        >
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={this.currentDateChange}
+            defaultCurrentViewName="week"
           />
-          <DayView startDayHour={7} endDayHour={21} displayName="Dzień"/>
-          <WeekView startDayHour={7} endDayHour={21} displayName="Tydzień"/>
-          <MonthView displayName="Miesiąc"/>
+          <EditingState
+          />
+          <EditRecurrenceMenu messages={getEditRecurrenceMessages(locale)} />
+          <DayView startDayHour={7} endDayHour={21} displayName="Dzień" />
+          <WeekView
+            name="week"
+            startDayHour={7}
+            endDayHour={21}
+            displayName="Tydzień"
+          />
+          <MonthView displayName="Miesiąc" />
           <Toolbar />
           <ViewSwitcher />
-          <TodayButton />
+          <TodayButton messages={getTodayButtonMessages(locale)} />
           <DateNavigator />
+          <ConfirmationDialog
+            messages={getConfirmationDialogMessages(locale)}
+          />
           <Appointments />
-          
-          <AppointmentForm readOnly/>
-          <AllDayPanel />
+          <AppointmentTooltip showOpenButton  />
+          <AppointmentForm messages={getAppointmentFormMessages(locale)} readOnly />
+          <AllDayPanel messages={getAllDayMessages(locale)} />
           <Resources data={resources} mainResourceName="typeId" />
         </Scheduler>
       </Paper>

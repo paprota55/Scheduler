@@ -2,6 +2,7 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { TextValidator } from "react-material-ui-form-validator";
 import useStyles from "./useStyles";
+import { registerPageMessages } from "../../../languages/plLanguage";
 
 const UsersPassword = ({
   password,
@@ -17,30 +18,30 @@ const UsersPassword = ({
         className={classes.textArea}
         onChange={handlePasswordChange}
         value={password}
-        label="Hasło"
+        label={registerPageMessages.passwordLabel}
         type="password"
         validators={[
           "required",
           "matchRegexp:^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$",
         ]}
         errorMessages={[
-          "To pole jest wymagane",
-          " Hasło musi zawierać przynajmniej 8 znaków, dodatkowo: specjalny oraz duża litera.",
+          registerPageMessages.fieldIsRequiredLabel,
+          registerPageMessages.passwordConditionsLabel,
         ]}
       />
       <TextValidator
         className={classes.textArea}
         onChange={handleRePasswordChange}
         value={rePassword}
-        label="Powtórz hasło"
+        label={registerPageMessages.repeatPasswordLabel}
         type="password"
         validators={[
           "required",
           "matchRegexp:^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#.?!@$%^&*-]).{8,}$",
         ]}
         errorMessages={[
-          "To pole jest wymagane",
-          " Hasło musi zawierać przynajmniej 8 znaków, dodatkowo: specjalny oraz duża litera.",
+          registerPageMessages.fieldIsRequiredLabel,
+          registerPageMessages.passwordConditionsLabel,
         ]}
       />
     </Grid>

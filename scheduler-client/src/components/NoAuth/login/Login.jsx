@@ -14,6 +14,9 @@ import { Redirect } from "react-router-dom";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import useStyles from "./useStyles";
+import {
+  loginPageMessages
+} from "../../../languages/plLanguage";
 
 const Login = () => {
   const classes = useStyles();
@@ -38,7 +41,7 @@ const Login = () => {
       <form onSubmit={handlesubmit}>
         <Grid>
           <Container width="40vw" height="60vh" bgr="white" col round>
-            <Typography className={classes.title}>Zaloguj się</Typography>
+            <Typography className={classes.title}>{loginPageMessages.loginTitle}</Typography>
             <Paper className={classes.paper}>
               <TextField
                 onChange={(event) => {
@@ -47,8 +50,8 @@ const Login = () => {
                 variant="outlined"
                 error={failed}
                 className={classes.textField}
-                placeholder="login"
-                label={failed ? errorMessage : "login"}
+                placeholder={loginPageMessages.loginPlaceHolder}
+                label={failed ? errorMessage : loginPageMessages.loginPlaceHolder}
                 type="text"
                 InputProps={{
                   startAdornment: (
@@ -67,8 +70,8 @@ const Login = () => {
                 variant="outlined"
                 error={failed}
                 className={classes.textField}
-                placeholder="hasło"
-                label={failed ? errorMessage : "hasło"}
+                placeholder={loginPageMessages.passwordPlaceHolder}
+                label={failed ? errorMessage : loginPageMessages.passwordPlaceHolder}
                 type="password"
                 InputProps={{
                   startAdornment: (
@@ -87,7 +90,7 @@ const Login = () => {
                     type="submit"
                     className={classes.buttonStyle}
                   >
-                    Zaloguj
+                    {loginPageMessages.loginButtonLabel}
                   </Button>
                 </a>
               </Grid>
@@ -105,7 +108,7 @@ const Login = () => {
                     href="/register"
                     className={classes.buttonStyle}
                   >
-                    Zarejestruj
+                    {loginPageMessages.registerButtonLabel}
                   </Button>
                 </a>
               </Grid>

@@ -4,11 +4,14 @@ import { selectAll } from "../../../features/register/registerSlice";
 import Alert from "@material-ui/lab/Alert";
 import useStyles from "./useStyles";
 import { Grid, Button } from "@material-ui/core";
+import { registerPageMessages } from "../../../languages/plLanguage";
 
 const FormControlPanel = ({ showSuccess }) => {
   const classes = useStyles();
 
-  const { password, rePassword, didSubmit, success, response } = useSelector(selectAll);
+  const { password, rePassword, didSubmit, success, response } = useSelector(
+    selectAll
+  );
   return (
     <Grid
       container
@@ -18,31 +21,37 @@ const FormControlPanel = ({ showSuccess }) => {
       className={classes.buttonArea}
     >
       {didSubmit && password !== rePassword && (
-        <Alert severity="error">Hasła nie są takie same.</Alert>
-      )}
-      {showSuccess && success && (
-        <Alert severity="success">Konto zostało utworzone</Alert>
-      )}
-      {showSuccess && !success && response &&(
         <Alert severity="error">
-          Konto o podanym loginie już istnieje.
+          {registerPageMessages.passwordsIncorrectAlert}
         </Alert>
       )}
-      {showSuccess && !success && !response &&(
+      {showSuccess && success && (
+        <Alert severity="success">
+          {registerPageMessages.accountWasCreatedAlert}
+        </Alert>
+      )}
+      {showSuccess && !success && response && (
         <Alert severity="error">
-          Serwer nie odpowiada.
+          {registerPageMessages.accountWithThisLoginExistAlert}
+        </Alert>
+      )}
+      {showSuccess && !success && !response && (
+        <Alert severity="error">
+          {registerPageMessages.serverNotRespondingAlert}
         </Alert>
       )}
 
-      <Grid container spacing={4} direction="column" justify = "center" alignItems = "center">
+      <Grid
+        container
+        spacing={4}
+        direction="column"
+        justify="center"
+        alignItems="center"
+      >
         <Grid item xs={6} style={{ textAlign: "center" }}>
           <a>
-            <Button
-              variant="contained"
-              type="submit"
-              width="100%"
-            >
-              Utwórz konto
+            <Button variant="contained" type="submit" width="100%">
+              {registerPageMessages.registerButtonLabel}
             </Button>
           </a>
         </Grid>
@@ -60,7 +69,7 @@ const FormControlPanel = ({ showSuccess }) => {
               width="100%"
               href="/login"
             >
-              Zaloguj
+              {registerPageMessages.loginButtonLabel}
             </Button>
           </a>
         </Grid>

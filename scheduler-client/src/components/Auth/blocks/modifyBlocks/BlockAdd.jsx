@@ -11,6 +11,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import plLocale from "date-fns/locale/pl";
+import { blockPageMessages } from "../../../../languages/plLanguage"
 
 const BlockAdd = ({
   btnHandler,
@@ -57,7 +58,7 @@ const BlockAdd = ({
             }}
           >
             <p style={{ fontWeight: "bold", fontSize: "25px" }}>
-              Dodaj nowy blok
+              {blockPageMessages.addNewBlockLabel}
             </p>
           </Grid>
           <Grid
@@ -68,14 +69,14 @@ const BlockAdd = ({
             style={{ marginTop: "3vh", marginBottom: "3vh" }}
           >
             <TextValidator
-              label="Nazwa bloku"
+              label={blockPageMessages.addBlockNameLabel}
               style={{ width: "100%" }}
               onChange={handleBlockNameChange}
               value={blockName}
               name="blockName"
               type="text"
               validators={["required"]}
-              errorMessages={["To pole jest wymagane."]}
+              errorMessages={[blockPageMessages.fieldIsRequiredLabel]}
             />
           </Grid>
           <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
@@ -83,11 +84,11 @@ const BlockAdd = ({
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
-              helperText="Podaj prawidłowy format"
+              helperText={blockPageMessages.addBlockDateHelper}
               format="dd-MM-yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Data od"
+              label={blockPageMessages.addBlockStartDateLabel}
               value={dateFrom}
               onChange={date => setDateFrom(date)}
               KeyboardButtonProps={{
@@ -101,11 +102,11 @@ const BlockAdd = ({
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
-              helperText="Podaj prawidłowy format"
+              helperText={blockPageMessages.addBlockDateHelper}
               format="dd-MM-yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Data do"
+              label={blockPageMessages.addBlockEndDateLabel}
               value={dateTo}
               onChange={date => setDateTo(date)}
               KeyboardButtonProps={{
@@ -124,7 +125,7 @@ const BlockAdd = ({
           >
             <a>
               <Button type="submit" variant="contained" color="secondary">
-                Dodaj
+                {blockPageMessages.addButtonLabel}
               </Button>
             </a>
             <a>
@@ -133,7 +134,7 @@ const BlockAdd = ({
                 variant="contained"
                 color="primary"
               >
-                Wróć
+                {blockPageMessages.cancelButtonLabel}
               </Button>
             </a>
           </Grid>
