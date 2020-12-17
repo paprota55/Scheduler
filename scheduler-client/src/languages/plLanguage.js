@@ -95,6 +95,7 @@ export const blockPageMessages = {
 
     fieldIsRequiredLabel: "To pole jest wymagane",
     addBlockNameLabel: "Nazwa bloku",
+    addBlockNotesLabel: "Notatka",
     addBlockStartDateLabel: "Data od",
     addBlockEndDateLabel: "Data do",
     addBlockDateHelper: "Podaj prawidłowy format",

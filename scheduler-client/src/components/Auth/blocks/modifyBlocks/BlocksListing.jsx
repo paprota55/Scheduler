@@ -31,6 +31,7 @@ const BlocksListing = ({ info, index }) => {
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
   const [blockName, setBlockName] = useState(info.blockName);
+  const [notes, setNotes] = useState(info.notes);
 
   const btnHandlerBack1 = () => {
     setOpen1(false);
@@ -49,13 +50,17 @@ const BlocksListing = ({ info, index }) => {
   const handleReset = () => {
     setDateFrom(null);
     setDateTo(null);
-    setBlockName(null);
+    setBlockName("");
   };
 
   const handleModify = () => {
-    setDateTo(dateTo);
-    setDateFrom(dateFrom);
-    dispatch(updateBlock({ blockName, dateFrom, dateTo }, alert));
+    let editBlock = {
+      blockName : info.blockName,
+      dateFrom: dateFrom,
+      dateTo : dateTo,
+      notes : notes,
+    }
+    dispatch(updateBlock(editBlock, alert));
     setOpen1(false);
     handleReset();
   };
@@ -106,6 +111,9 @@ const BlocksListing = ({ info, index }) => {
           btnHandlerBack={btnHandlerBack1}
           dateFrom={dateFrom}
           dateTo={dateTo}
+          notes={notes}
+          setNotes = {setNotes}
+          setBlockName = {setBlockName}
           setDateFrom={setDateFrom}
           setDateTo={setDateTo}
         />

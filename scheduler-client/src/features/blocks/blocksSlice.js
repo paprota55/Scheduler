@@ -35,7 +35,6 @@ export const fetchBlocks = () => async (dispatch) => {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     });
-    console.log(response.data);
     dispatch(setBlocks(response.data));
   } catch (error) {
     console.log(error);
@@ -57,6 +56,7 @@ export const deleteBlock = (blockName, alert) => async (dispatch) => {
 };
 
 export const updateBlock = (editBlock, alert) => async (dispatch) => {
+  console.log(editBlock);
   try {
     await axios.put(API_URL + UpdateBlock, editBlock, {
       headers: {

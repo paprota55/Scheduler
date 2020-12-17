@@ -19,9 +19,11 @@ const BlockAdd = ({
   dateFrom,
   dateTo,
   blockName,
+  notes,
   setDateFrom,
   setDateTo,
   setBlockName,
+  setNotes,
 }) => {
   const alert = useAlert();
 
@@ -38,8 +40,12 @@ const BlockAdd = ({
     setBlockName(event.target.value);
   };
 
+  const handleNotesChange = (event) => {
+    setNotes(event.target.value);
+  };
+
   return (
-    <Paper style={{ width: "30%", height: "80%" }}>
+    <Paper style={{ width: "30%", height: "70%" }}>
       <ValidatorForm onSubmit={submit}>
         <Grid
           container
@@ -66,7 +72,7 @@ const BlockAdd = ({
             item
             justify="center"
             alignContent="center"
-            style={{ marginTop: "3vh", marginBottom: "3vh" }}
+            style={{ marginTop: "1vh", marginBottom: "1vh" }}
           >
             <TextValidator
               label={blockPageMessages.addBlockNameLabel}
@@ -79,7 +85,23 @@ const BlockAdd = ({
               errorMessages={[blockPageMessages.fieldIsRequiredLabel]}
             />
           </Grid>
-          <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
+          <Grid
+            xs={12}
+            item
+            justify="center"
+            alignContent="center"
+            style={{ marginTop: "1vh", marginBottom: "1vh" }}
+          >
+            <TextValidator
+              label={blockPageMessages.addBlockNotesLabel}
+              style={{ width: "100%" }}
+              onChange={handleNotesChange}
+              value={notes}
+              name="notes"
+              type="text"
+            />
+          </Grid>
+          <Grid xs={12} item  style={{ marginTop: "1vh", marginBottom: "1vh" }}>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={plLocale}>
             <KeyboardDatePicker
               disableToolbar
@@ -97,7 +119,7 @@ const BlockAdd = ({
             />
           </MuiPickersUtilsProvider>
           </Grid>
-          <Grid xs={12} item style={{ marginTop: "3vh", marginBottom: "3vh" }}>
+          <Grid xs={12} item style={{ marginTop: "1vh", marginBottom: "1vh" }}>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={plLocale}>
             <KeyboardDatePicker
               disableToolbar

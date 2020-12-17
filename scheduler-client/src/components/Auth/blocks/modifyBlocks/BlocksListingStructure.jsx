@@ -31,7 +31,7 @@ const BlocksListingStructure = () => {
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
   const [blockName, setBlockName] = useState("");
-  const [notes, setNotes] = useState("dodajemy");
+  const [notes, setNotes] = useState("");
 
   const btnHandlerBack = () => {
     setOpen(false);
