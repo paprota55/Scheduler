@@ -79,4 +79,9 @@ public class BlocksController {
     public ResponseEntity<?> getMyBlocks() {
         return ResponseEntity.ok(this.blockService.getCurrentUserBlocks());
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "api/blocks/getBlocksToScheduler")
+    public ResponseEntity<?> getMyBlocksToScheduler() {
+        return ResponseEntity.ok(this.blockService.getCurrentUserBlocksToScheduler());
+    }
 }

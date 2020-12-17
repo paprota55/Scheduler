@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.rafalpaprota.schedulerserver.dto.BlockDTO;
 import pl.rafalpaprota.schedulerserver.dto.BlockDisplayDTO;
+import pl.rafalpaprota.schedulerserver.dto.BlockToCreateAppointmentDTO;
 import pl.rafalpaprota.schedulerserver.model.Block;
 import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.BlockRepository;
@@ -97,6 +98,18 @@ public class BlockService {
         ArrayList<BlockDisplayDTO> blockDTOList = new ArrayList<>();
         for (Block current : blockList) {
             blockDTOList.add(new BlockDisplayDTO(current.getBlockName(), current.getDateFrom(), current.getDateTo(), current.getNotes()));
+        }
+        return blockDTOList;
+    }
+
+    public List<BlockToCreateAppointmentDTO> getCurrentUserBlocksToScheduler() {
+        User user = this.userService.getCurrentUser();
+        Long index = 0L;
+        ArrayList<Block> blockList = sortBlockList((ArrayList<Block>) this.blockRepository.findAllByUser(user));
+        ArrayList<BlockToCreateAppointmentDTO> blockDTOList = new ArrayList<>();
+        for (Block current : blockList) {
+            blockDTOList.add(new BlockToCreateAppointmentDTO(index, current.getBlockName()));
+            index++;
         }
         return blockDTOList;
     }
