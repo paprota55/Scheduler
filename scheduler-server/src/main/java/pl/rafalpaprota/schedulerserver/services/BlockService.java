@@ -86,7 +86,7 @@ public class BlockService {
     public ArrayList<Block> sortBlockList(ArrayList<Block> listToSort) {
         ArrayList<Block> newList = new ArrayList<>();
         if (listToSort != null) {
-            if (listToSort.size() == 1) {
+            if (listToSort.size() <= 1) {
                 return listToSort;
             }
             int index = 0;
