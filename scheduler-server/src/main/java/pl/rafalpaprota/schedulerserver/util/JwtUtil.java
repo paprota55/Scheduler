@@ -74,7 +74,6 @@ public class JwtUtil {
 
         final Claims claims = claimsJws.getBody();
 
-        //TODO przerobic na wersje z jedna rola (malo priorytetowe)
         final Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(this.AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)

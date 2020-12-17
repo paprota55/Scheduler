@@ -52,17 +52,35 @@ public class BlockService {
     public Long addBlockToDB(BlockDTO blockDTO, User user) {
         Block block = new Block();
         block.setBlockName(blockDTO.getBlockName());
-        block.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0));
-        block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0));
+        block.setDateTo(blockDTO.getDateTo());
+        block.setDateFrom(blockDTO.getDateFrom());
         block.setNotes(blockDTO.getNotes());
         block.setUser(user);
 
         return this.blockRepository.save(block).getId();
     }
 
-    //TODO zrób to
-    public boolean checkIfBlockInDatesExistInCurrentUser(BlockDTO blockDTO, User user) {
-        return true;
+    public boolean checkIfBlockBetweenDatesExist(BlockDTO blockDTO, User user) {
+        List<Block> userBlocks = this.blockRepository.findAllByUser(user);
+        if (userBlocks.size() < 1) {
+        } else {
+            for (Block userBlock : userBlocks) {
+                if (!blockDTO.getBlockName().equals(userBlock.getBlockName())) {
+                    if (((blockDTO.getDateFrom().isBefore(userBlock.getDateFrom()) || blockDTO.getDateFrom().isBefore(userBlock.getDateTo())) &&
+                            !blockDTO.getDateTo().isBefore(userBlock.getDateFrom())) ||
+                            (blockDTO.getDateFrom().isEqual(userBlock.getDateFrom()) || blockDTO.getDateFrom().isEqual(userBlock.getDateTo()) ||
+                                    blockDTO.getDateTo().isEqual(userBlock.getDateFrom()) || blockDTO.getDateTo().isEqual(userBlock.getDateTo()))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void setStartDayInBlockDTO(BlockDTO blockDTO) {
+        blockDTO.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0).withSecond(0).withNano(0));
+        blockDTO.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0).withSecond(0).withNano(0));
     }
 
     public void deleteBlockFromDB(String blockName, User user) {

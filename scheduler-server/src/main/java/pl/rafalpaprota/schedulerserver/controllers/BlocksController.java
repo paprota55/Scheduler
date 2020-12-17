@@ -24,10 +24,15 @@ public class BlocksController {
     @RequestMapping(method = RequestMethod.POST, value = "api/blocks/addBlock")
     public ResponseEntity<?> addBlock(@RequestBody BlockDTO blockDTO) {
         User user = this.userService.getCurrentUser();
+        this.blockService.setStartDayInBlockDTO(blockDTO);
         if (this.blockService.checkDatesCorrectness(blockDTO.getDateFrom(), blockDTO.getDateTo())) {
             if (!this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
-                this.blockService.addBlockToDB(blockDTO, user);
-                return ResponseEntity.ok("Blok został dodany.");
+                if (!this.blockService.checkIfBlockBetweenDatesExist(blockDTO, user)) {
+                    this.blockService.addBlockToDB(blockDTO, user);
+                    return ResponseEntity.ok("Blok został dodany.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Posiadasz już blok w tych datach");
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Blok o podanej nazwie już istnieje.");
             }
@@ -52,14 +57,19 @@ public class BlocksController {
         User user = this.userService.getCurrentUser();
         if (this.blockService.checkBlockExist(blockDTO.getBlockName(), user)) {
             if (blockDTO.getDateFrom() != null && blockDTO.getDateTo() != null) {
-                if (this.blockService.checkDatesCorrectness(blockDTO.getDateFrom(), blockDTO.getDateTo())) {
-                    this.blockService.modifyBlockInDB(blockDTO, user);
-                    return ResponseEntity.ok("Blok został zmieniony.");
+                this.blockService.setStartDayInBlockDTO(blockDTO);
+                if (!this.blockService.checkIfBlockBetweenDatesExist(blockDTO, user)) {
+                    if (this.blockService.checkDatesCorrectness(blockDTO.getDateFrom(), blockDTO.getDateTo())) {
+                        this.blockService.modifyBlockInDB(blockDTO, user);
+                        return ResponseEntity.ok("Blok został zmieniony.");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zła kolejność dat.");
+                    }
                 } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zła kolejność dat.");
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Posiadasz już blok w tych datach");
                 }
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podałeś którejś z dat.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie podałeś którejś z dat.");
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Nie posiadasz bloku o takiej nazwie.");
         }
