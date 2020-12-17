@@ -31,8 +31,11 @@ const BlockAdd = ({
     event.preventDefault();
     if (dateFrom && dateTo && blockName !== "" && dateFrom < dateTo) {
       btnHandler();
-    } else {
-      alert.error("Nie podałeś nazwy, bądź zła data");
+    } 
+    else if (blockName === ""){
+      alert.error("Nie podałeś nazwy.");
+    }else {
+      alert.error("Podałeś złe daty.");
     }
   }
 
@@ -105,6 +108,7 @@ const BlockAdd = ({
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={plLocale}>
             <KeyboardDatePicker
               disableToolbar
+              style={{ width: "100%" }}
               variant="inline"
               helperText={blockPageMessages.addBlockDateHelper}
               format="dd-MM-yyyy"
@@ -123,6 +127,7 @@ const BlockAdd = ({
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={plLocale}>
             <KeyboardDatePicker
               disableToolbar
+              style={{ width: "100%" }}
               variant="inline"
               helperText={blockPageMessages.addBlockDateHelper}
               format="dd-MM-yyyy"

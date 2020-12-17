@@ -68,10 +68,22 @@ export const updateBlock = (editBlock, alert) => async (dispatch) => {
   } catch (error) {
     if(error.response.status === 400)
     {
-    alert.error("Problem z podanymi datami. Spróbuj ponownie.");
+    alert.error("Data końca występuje przed datą początku.");
+    }
+    else if(error.response.status === 406)
+    {
+    alert.error("Podane daty bloku nachodzą na inny.");
+    }
+    else if(error.response.status === 409)
+    {
+    alert.error("Nie możemy znaleźć bloku o podanej nazwie.");
+    }
+    else if(error.response.status === 404)
+    {
+    alert.error("Nie została wprowadzona jedna z dat.");
     }
     else{
-      alert.error("Nie posiadasz bloku o podanej nazwie.");
+      alert.error("Serwer nie odpowiada.");
     }
   }
 };
@@ -90,7 +102,10 @@ export const addBlock = (addBlock, alert) => async (dispatch) => {
     {
     alert.error("Blok o podanej nazwie już istnieje");
     }
-    else if (error.response.status === 409 ){
+    else if (error.response.status === 406 ){
+      alert.error("Podane daty nachodzą na istniejący blok");
+    }
+    else if (error.response.status === 400 ){
       alert.error("Podałeś nieprawidłowe daty");
     }
     else{

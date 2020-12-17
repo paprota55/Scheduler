@@ -16,10 +16,10 @@ const UserNavbar = () => {
       <Navbar
         bg="light"
         variant="light"
-        style={{ width: "100%", margin: "0", padding: "0" }}
+        style={{ width: "100%", margin: "0", padding: "0", height: "8vh" }}
       >
         <Navbar.Brand href="/userPage">
-          <Image src={Logo} width="70" height="70" />
+          <Image src={Logo} width="50" height="100%" />
         </Navbar.Brand>
         <Nav className="mr-auto" style={{ fontSize: "25px" }}>
           <Nav.Link href="#/instruction">{navbarComponentMessages.instructionLabel}</Nav.Link>

@@ -20,6 +20,7 @@ import {
   ConfirmationDialog,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
+
 import { types } from "../schedulerCommons/Types";
 import { status } from "../schedulerCommons/Status";
 import {
@@ -95,6 +96,8 @@ export default class Calendar extends React.PureComponent {
 
   commitChanges({ added, changed, deleted }) {
     if (added) {
+      console.log("added");
+      console.log(added);
       if(added.title === undefined){
         added.title = 'Nowy';
       }
@@ -107,7 +110,6 @@ export default class Calendar extends React.PureComponent {
         ...added,
         statusId: 0,
       });
-      console.log(added);
     }
     if (changed) {
       this.props.events.map((appointment) =>
@@ -173,7 +175,7 @@ export default class Calendar extends React.PureComponent {
           />
           <Appointments />
           <AppointmentTooltip showOpenButton showDeleteButton />
-          <AppointmentForm dateEditorComponent={DateEditor} messages={getAppointmentFormMessages(locale)} locale ={locale}/>
+          <AppointmentForm dateEditorComponent={DateEditor} messages={getAppointmentFormMessages(locale)}/>
           <AllDayPanel messages={getAllDayMessages(locale)} />
           <DragDropProvider />
           <Resources data={resources} mainResourceName="typeId" />

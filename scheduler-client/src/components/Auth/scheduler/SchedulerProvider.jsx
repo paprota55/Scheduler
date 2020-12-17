@@ -19,7 +19,6 @@ const SchedulerProvider = () => {
         }
 
         const changeOldEvent = (event) => {
-          console.log(event);
           dispatch(changeEvent(event,blockName, alert));
         }
 
@@ -28,7 +27,7 @@ const SchedulerProvider = () => {
         }, [dispatch]);
 
   return (
-    <div>
+    <div style={{height: "100%"}}>
       <Scheduler events = {data} deleteEventt = {deleteOldEvent} addNewEventt = {addNewEvent} changeOldEvent = {changeOldEvent}/>
     </div>
   );
