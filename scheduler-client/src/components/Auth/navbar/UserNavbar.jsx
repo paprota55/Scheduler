@@ -9,6 +9,7 @@ const UserNavbar = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    localStorage.clear();
     dispatch(logout());
   };
   return (

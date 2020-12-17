@@ -48,6 +48,7 @@ export const login = ({ login, password }) => {
         password: password,
       });
       const { token, role } = response.data;
+      localStorage.setItem("blockInfo", "Aktualnie ładujesz wszystkie swoje wydarzenia.")
       localStorage.setItem("token", token);
       dispatch(setRedirectAddress("/userPage"));
       dispatch(allowRedirect(true));

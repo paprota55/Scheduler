@@ -14,7 +14,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import BlockAdd from "./BlockAdd";
 import { addBlock } from "../../../../features/blocks/blocksSlice";
 import { fetchEvents, setBlockNameInSlice } from "../../../../features/scheduler/schedulerSlice";
-import { blockPageMessages } from "../../../../languages/plLanguage"
+import { blockPageMessages } from "../../../../languages/plLanguage";
+import { fetchSchedulerBlocksList } from "../../../../features/blocks/blocksSlice";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -33,6 +34,10 @@ const BlocksListingStructure = () => {
   const [blockName, setBlockName] = useState("");
   const [notes, setNotes] = useState("");
 
+  useEffect(() => {
+    dispatch(fetchSchedulerBlocksList());
+  }, [dispatch]);
+
   const btnHandlerBack = () => {
     setOpen(false);
   };
@@ -43,6 +48,7 @@ const BlocksListingStructure = () => {
 
   const loadData = () => {
     dispatch(setBlockNameInSlice("all"));
+    localStorage.setItem("blockInfo", "Aktualnie ładujesz wszystkie swoje wydarzenia.")
     dispatch(fetchEvents(alert));
   };
 

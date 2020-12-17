@@ -4,11 +4,13 @@ import serverIP from "../../config";
 
 const API_URL = serverIP;
 const GetBlocks = "api/blocks/getBlocks";
+const GetSchedulerBlocksList = "api/blocks/getBlocksToScheduler";
 const UpdateBlock = "api/blocks/modifyBlock";
 const AddBlock ="api/blocks/addBlock";
 
 const initialState = {
   blocks: [],
+  schedulerBlocksList: [],
 };
 
 export const blocksSlice = createSlice({
@@ -18,15 +20,34 @@ export const blocksSlice = createSlice({
     setBlocks: (state, action) => {
       state.blocks = action.payload;
     },
+    setSchedulerBlocksList: (state, action) => {
+      state.schedulerBlocksList = action.payload;
+    },
   },
 });
 
 export const {
   setBlocks,
+  setSchedulerBlocksList,
 } = blocksSlice.actions;
 
 export const selectBlocks = (state) => state.blocks.blocks;
+export const selectSchedulerBlocksList = (state) => state.blocks.schedulerBlocksList;
 export const selectAll = (state) => state.blocks;
+
+export const fetchSchedulerBlocksList = () => async (dispatch) => {
+  try {
+    const response = await axios.get(API_URL + GetSchedulerBlocksList, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    dispatch(setSchedulerBlocksList(response.data));
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const fetchBlocks = () => async (dispatch) => {
   try {
@@ -49,6 +70,7 @@ export const deleteBlock = (blockName, alert) => async (dispatch) => {
       },
     });
     dispatch(fetchBlocks());
+    dispatch(fetchSchedulerBlocksList());
     alert.success("Operacja przebiegła pomyślnie.");
   } catch (error) {
     alert.error("Serwer nie odpowiada.");
@@ -64,6 +86,7 @@ export const updateBlock = (editBlock, alert) => async (dispatch) => {
       },
     });
     dispatch(fetchBlocks());
+    dispatch(fetchSchedulerBlocksList());
     alert.success("Operacja przebiegła pomyślnie.");
   } catch (error) {
     if(error.response.status === 400)

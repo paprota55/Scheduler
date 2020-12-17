@@ -75,6 +75,7 @@ const BlocksListing = ({ info, index }) => {
 
   const handleToggle3 = () => {
     dispatch(setBlockNameInSlice(info.blockName));
+    localStorage.setItem("blockInfo",'Nazwa bloku: ' + info.blockName + ", data rozpoczęcia: " +info.dateFrom+ ", data zakończenia: " + info.dateTo);
     console.log(info.blockName);
     dispatch(fetchEventsByBlock(info.blockName,alert));
   };

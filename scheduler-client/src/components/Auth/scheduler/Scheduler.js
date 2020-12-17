@@ -59,11 +59,18 @@ export default class Calendar extends React.PureComponent {
           allowMultiple: false,
         },
         {
+          fieldName: "blockId",
+          title: "Wybierz gdzie utworzyć wydarzenie",
+          instances: this.props.blocksList,
+          allowMultiple: false,
+        },
+        {
           fieldName: "statusId",
           title: "Status",
           instances: status,
           allowMultiple: false,
         },
+        
       ],
 
       locale: "pl",
@@ -72,7 +79,7 @@ export default class Calendar extends React.PureComponent {
       appointmentChanges: {},
       editingAppointment: undefined,
     };
-
+    console.log(this.props.blocksList);
     this.currentDateChange = (currentDate) => {
       this.setState({ currentDate });
     };
@@ -96,8 +103,6 @@ export default class Calendar extends React.PureComponent {
 
   commitChanges({ added, changed, deleted }) {
     if (added) {
-      console.log("added");
-      console.log(added);
       if(added.title === undefined){
         added.title = 'Nowy';
       }
@@ -137,7 +142,7 @@ export default class Calendar extends React.PureComponent {
     } = this.state;
 
     return (
-      <Paper style={{ height: "91vh", justifyContent: "center" }}>
+      <Paper style={{ height: "89vh", justifyContent: "center" }}>
         <Scheduler
           data={this.props.events}
           height={"100%"}
