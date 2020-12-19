@@ -42,6 +42,8 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+    
+    private LocalDateTime dateFromArchiveCount;
 
     //TODO daj tutaj wyliczoną datę zakończenia
 }

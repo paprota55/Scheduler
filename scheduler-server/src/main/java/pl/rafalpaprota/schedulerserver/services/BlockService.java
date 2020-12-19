@@ -81,7 +81,7 @@ public class BlockService {
 
     public void setStartDayInBlockDTO(BlockDTO blockDTO) {
         blockDTO.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0).withSecond(0).withNano(0));
-        blockDTO.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0).withSecond(0).withNano(0));
+        blockDTO.setDateTo(blockDTO.getDateTo().withHour(23).withMinute(59).withSecond(59).withNano(0));
     }
 
     public void deleteBlockFromDB(String blockName, User user) {
@@ -104,14 +104,20 @@ public class BlockService {
 
     public List<BlockToCreateAppointmentDTO> getCurrentUserBlocksToScheduler() {
         User user = this.userService.getCurrentUser();
-        Long index = 0L;
+        Long index = 1L;
         ArrayList<Block> blockList = sortBlockList((ArrayList<Block>) this.blockRepository.findAllByUser(user));
         ArrayList<BlockToCreateAppointmentDTO> blockDTOList = new ArrayList<>();
+        blockDTOList.add(new BlockToCreateAppointmentDTO(0L, "Bez bloku"));
         for (Block current : blockList) {
             blockDTOList.add(new BlockToCreateAppointmentDTO(index, current.getBlockName()));
             index++;
         }
         return blockDTOList;
+    }
+
+    public Block getBlockBySortedIdFromScheduler(Integer id) {
+        List<BlockToCreateAppointmentDTO> list = getCurrentUserBlocksToScheduler();
+        return getCurrentUserBlockByName(list.get(id).getText());
     }
 
     public ArrayList<Block> sortBlockList(ArrayList<Block> listToSort) {

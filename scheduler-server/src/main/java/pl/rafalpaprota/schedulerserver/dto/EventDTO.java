@@ -23,6 +23,8 @@ public class EventDTO {
 
     private Integer statusId;
 
+    private Integer blockId;
+
     private String notes;
 
     @JsonProperty("rRule")

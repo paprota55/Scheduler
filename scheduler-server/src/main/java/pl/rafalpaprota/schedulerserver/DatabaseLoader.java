@@ -49,7 +49,7 @@ public class DatabaseLoader implements CommandLineRunner {
     }
 
     @Override
-    public void run(final String... strings) throws Exception {
+    public void run(final String... strings) {
 
         if (this.dataBase.equals("postgres")) {
             this.roleService.addRole("USER");
@@ -64,9 +64,9 @@ public class DatabaseLoader implements CommandLineRunner {
             Long id = this.userService.addUser(user);
             user = this.userRepository.findById(id).get();
             this.settingsService.createNewSettings(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(0), "Notka"), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(23).withMinute(59), "Notka"), user);
             this.userService.addUser(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(0), "Druga"), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(23).withMinute(59), "Druga"), user);
             Event event = new Event();
             event.setUser(user);
             event.setExDate("");
@@ -75,6 +75,7 @@ public class DatabaseLoader implements CommandLineRunner {
             event.setTypeId(12);
             event.setAllDay(false);
             event.setNotes("Witam");
+            event.setDateFromArchiveCount(LocalDateTime.now().withHour(10).plusDays(30));
             event.setTitle("Pierwszy event");
             event.setStartDate(LocalDateTime.now().withHour(10));
             event.setEndDate(LocalDateTime.now().withHour(11));

@@ -25,6 +25,7 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.POST, value = "api/events/addEvent")
     public ResponseEntity<?> addEvent(@RequestBody EventDTO eventDTO) {
+        System.out.println(eventDTO);
         if (eventDTO.getStartDate().isBefore(eventDTO.getEndDate())) {
             return ResponseEntity.ok(this.eventService.addNewEvent(eventDTO));
         } else {
@@ -34,6 +35,7 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "api/events/changeEvent/{id}")
     public ResponseEntity<?> changeEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
+        System.out.println(eventDTO);
         if (this.eventService.checkIfExist(id)) {
             if (eventDTO.getStartDate().isBefore(eventDTO.getEndDate())) {
                 return ResponseEntity.ok(this.eventService.changeEvent(eventDTO));

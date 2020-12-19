@@ -10,6 +10,7 @@ import pl.rafalpaprota.schedulerserver.model.User;
 import pl.rafalpaprota.schedulerserver.repositories.EventRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +34,13 @@ public class EventService {
 
     public Long addNewEvent(EventDTO eventDTO) {
         Event newEvent = new Event();
+        eventDTO.setStartDate(eventDTO.getStartDate().plusHours(1));
+        eventDTO.setEndDate(eventDTO.getEndDate().plusHours(1));
+        newEvent.setDateFromArchiveCount(calculateEndDate(eventDTO));
         newEvent.setId(eventDTO.getId());
         newEvent.setAllDay(eventDTO.getAllDay());
-        newEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
-        newEvent.setStartDate(eventDTO.getStartDate().plusHours(1));
+        newEvent.setEndDate(eventDTO.getEndDate());
+        newEvent.setStartDate(eventDTO.getStartDate());
         newEvent.setTitle(eventDTO.getTitle());
         newEvent.setNotes(eventDTO.getNotes());
         newEvent.setTypeId(eventDTO.getTypeId());
@@ -47,22 +51,340 @@ public class EventService {
         return this.eventRepository.save(newEvent).getId();
     }
 
+    public LocalDateTime calculateEndDate(EventDTO eventDTO) {
+        LocalDateTime endDate;
+
+        if (eventDTO.getRRule().equals("")) {
+            endDate = eventDTO.getEndDate();
+        } else {
+
+            String newRrule = eventDTO.getRRule().replace("RRULE:", "");
+            eventDTO.setRRule(newRrule);
+            Block block = null;
+            if (eventDTO.getBlockId() != 0) {
+                block = this.blockService.getBlockBySortedIdFromScheduler(eventDTO.getBlockId());
+                System.out.println(block);
+            }
+            if (newRrule.contains("FREQ=DAILY")) {
+                endDate = calculateByDaily(eventDTO, block);
+            } else if (newRrule.contains("FREQ=WEEKLY")) {
+                endDate = calculateByWeekly(eventDTO, block);
+            } else if (newRrule.contains("FREQ=MONTHLY")) {
+                endDate = calculateByMonthly(eventDTO, block);
+            } else {
+                endDate = calculateByYearly(eventDTO, block);
+            }
+        }
+
+        return endDate;
+    }
+
+    private LocalDateTime calculateByYearly(EventDTO eventDTO, Block block) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+        LocalDateTime endDate = null;
+        String[] parts = eventDTO.getRRule().split(";");
+        StringBuilder newRrule = new StringBuilder();
+        if (block != null) {
+            changeIfBeforeOrAfterBlock(eventDTO, block);
+            if (eventDTO.getRRule().contains("COUNT")) {
+                for (String part : parts) {
+                    if (part.contains("COUNT")) {
+                        String endTimeString = part.replace("COUNT=", "");
+                        int count = Integer.parseInt(endTimeString);
+                        LocalDateTime endTime = eventDTO.getEndDate().plusYears(count);
+                        endDate = endTime;
+                        if (endTime.isAfter(block.getDateTo())) {
+                            endDate = block.getDateTo();
+                            newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                        } else {
+                            newRrule.append(part).append(";");
+                        }
+
+                    } else if (part.contains("UNTIL")) {
+                        String endTimeString = part.replace("UNTIL=", "");
+                        endTimeString = endTimeString.replace("Z", "");
+                        LocalDateTime endTime = LocalDateTime.parse(endTimeString, formatter);
+
+                        if (endTime.isAfter(block.getDateTo())) {
+                            newRrule.append("UNTIL=").append(block.getDateTo().format(formatter)).append(";");
+                            endDate = block.getDateTo();
+                        } else if (endTime.isBefore(block.getDateFrom())) {
+                            newRrule.append("UNTIL=").append(eventDTO.getEndDate().format(formatter)).append(";");
+                            endDate = eventDTO.getEndDate();
+                        } else {
+                            newRrule.append("UNTIL=").append(endTime.format(formatter)).append(";");
+                            endDate = endTime;
+                        }
+                    } else {
+                        newRrule.append(part).append(";");
+                    }
+                }
+                eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+            }
+        } else {
+            for (String part : parts) {
+                if (part.contains("UNTIL")) {
+                    String endTimeString = part.replace("UNTIL=", "");
+                    endTimeString = endTimeString.replace("Z", "");
+                    endDate = LocalDateTime.parse(endTimeString, formatter);
+                    if (endDate.isBefore(eventDTO.getEndDate())) {
+                        endDate = eventDTO.getEndDate();
+                        newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                    }
+                } else if (part.contains("COUNT")) {
+                    String endTimeString = part.replace("COUNT=", "");
+                    int count = Integer.parseInt(endTimeString);
+                    endDate = eventDTO.getEndDate().plusYears(count);
+                } else {
+                    newRrule.append(part).append(";");
+                }
+            }
+            eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+        }
+
+        return endDate;
+    }
+
+    private LocalDateTime calculateByMonthly(EventDTO eventDTO, Block block) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+        LocalDateTime endDate = null;
+        String[] parts = eventDTO.getRRule().split(";");
+        StringBuilder newRrule = new StringBuilder();
+        if (block != null) {
+            changeIfBeforeOrAfterBlock(eventDTO, block);
+            if (eventDTO.getRRule().contains("COUNT")) {
+                for (String part : parts) {
+                    if (part.contains("COUNT")) {
+                        String endTimeString = part.replace("COUNT=", "");
+                        int count = Integer.parseInt(endTimeString);
+                        LocalDateTime endTime = eventDTO.getEndDate().plusMonths(count);
+                        endDate = endTime;
+                        if (endTime.isAfter(block.getDateTo())) {
+                            endDate = block.getDateTo();
+                            newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                        } else {
+                            newRrule.append(part).append(";");
+                        }
+
+                    } else if (part.contains("UNTIL")) {
+                        String endTimeString = part.replace("UNTIL=", "");
+                        endTimeString = endTimeString.replace("Z", "");
+                        LocalDateTime endTime = LocalDateTime.parse(endTimeString, formatter);
+
+                        if (endTime.isAfter(block.getDateTo())) {
+                            newRrule.append("UNTIL=").append(block.getDateTo().format(formatter)).append(";");
+                            endDate = block.getDateTo();
+                        } else if (endTime.isBefore(block.getDateFrom())) {
+                            newRrule.append("UNTIL=").append(eventDTO.getEndDate().format(formatter)).append(";");
+                            endDate = eventDTO.getEndDate();
+                        } else {
+                            newRrule.append("UNTIL=").append(endTime.format(formatter)).append(";");
+                            endDate = endTime;
+                        }
+                    } else {
+                        newRrule.append(part).append(";");
+                    }
+                }
+                eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+            }
+        } else {
+            for (String part : parts) {
+                if (part.contains("UNTIL")) {
+                    String endTimeString = part.replace("UNTIL=", "");
+                    endTimeString = endTimeString.replace("Z", "");
+                    endDate = LocalDateTime.parse(endTimeString, formatter);
+                    if (endDate.isBefore(eventDTO.getEndDate())) {
+                        endDate = eventDTO.getEndDate();
+                        newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                    }
+                } else if (part.contains("COUNT")) {
+                    String endTimeString = part.replace("COUNT=", "");
+                    int count = Integer.parseInt(endTimeString);
+                    endDate = eventDTO.getEndDate().plusMonths(count);
+                } else {
+                    newRrule.append(part).append(";");
+                }
+            }
+            eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+        }
+
+        return endDate;
+    }
+
+    private LocalDateTime calculateByWeekly(EventDTO eventDTO, Block block) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+        LocalDateTime endDate = null;
+        String[] parts = eventDTO.getRRule().split(";");
+        StringBuilder newRrule = new StringBuilder();
+        if (block != null) {
+            changeIfBeforeOrAfterBlock(eventDTO, block);
+            if (parts.length == 2 || (parts.length == 3 && eventDTO.getRRule().contains("BYDAY"))) {
+                eventDTO.setRRule(eventDTO.getRRule() + ";UNTIL=" + block.getDateTo().format(formatter));
+                endDate = block.getDateTo();
+            } else if (eventDTO.getRRule().contains("UNTIL")) {
+                for (String part : parts) {
+                    if (part.contains("UNTIL")) {
+                        String endTimeString = part.replace("UNTIL=", "");
+                        endTimeString = endTimeString.replace("Z", "");
+                        LocalDateTime endTime = LocalDateTime.parse(endTimeString, formatter);
+
+                        if (endTime.isAfter(block.getDateTo())) {
+                            newRrule.append("UNTIL=").append(block.getDateTo().format(formatter)).append(";");
+                            endDate = block.getDateTo();
+                        } else if (endTime.isBefore(block.getDateFrom())) {
+                            newRrule.append("UNTIL=").append(eventDTO.getEndDate().format(formatter)).append(";");
+                            endDate = eventDTO.getEndDate();
+                        } else {
+                            newRrule.append("UNTIL=").append(endTime.format(formatter)).append(";");
+                            endDate = endTime;
+                        }
+                    } else {
+                        newRrule.append(part).append(";");
+                    }
+                }
+                eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+            } else {
+                for (String part : parts) {
+                    if (part.contains("COUNT")) {
+                        String endTimeString = part.replace("COUNT=", "");
+                        int count = Integer.parseInt(endTimeString);
+                        LocalDateTime endTime = eventDTO.getEndDate().plusDays(count * 7);
+                        endDate = endTime;
+                        if (endTime.isAfter(block.getDateTo())) {
+                            endDate = block.getDateTo();
+                            newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                        } else {
+                            newRrule.append(part).append(";");
+                        }
+
+                    } else {
+                        newRrule.append(part).append(";");
+                    }
+                }
+                eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+            }
+        } else {
+            for (String part : parts) {
+                if (part.contains("UNTIL")) {
+                    String endTimeString = part.replace("UNTIL=", "");
+                    endTimeString = endTimeString.replace("Z", "");
+                    endDate = LocalDateTime.parse(endTimeString, formatter);
+                    if (endDate.isBefore(eventDTO.getEndDate())) {
+                        endDate = eventDTO.getEndDate();
+                        newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                    }
+                } else if (part.contains("COUNT")) {
+                    String endTimeString = part.replace("COUNT=", "");
+                    int count = Integer.parseInt(endTimeString);
+                    endDate = eventDTO.getEndDate().plusDays(count * 7);
+                }
+                newRrule.append(part).append(";");
+            }
+            eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+        }
+
+        return endDate;
+    }
+
+    private LocalDateTime calculateByDaily(EventDTO eventDTO, Block block) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+        LocalDateTime endDate = null;
+        String[] parts = eventDTO.getRRule().split(";");
+        StringBuilder newRrule = new StringBuilder();
+        if (block != null) {
+            changeIfBeforeOrAfterBlock(eventDTO, block);
+            if (parts.length == 2) {
+                eventDTO.setRRule(eventDTO.getRRule() + ";UNTIL=" + block.getDateTo().format(formatter));
+                endDate = block.getDateTo();
+            } else if (eventDTO.getRRule().contains("UNTIL")) {
+                for (String part : parts) {
+                    if (part.contains("UNTIL")) {
+                        String endTimeString = part.replace("UNTIL=", "");
+                        endTimeString = endTimeString.replace("Z", "");
+                        LocalDateTime endTime = LocalDateTime.parse(endTimeString, formatter);
+
+                        if (endTime.isAfter(block.getDateTo())) {
+                            newRrule.append("UNTIL=").append(block.getDateTo().format(formatter)).append(";");
+                            endDate = block.getDateTo();
+                        } else if (endTime.isBefore(block.getDateFrom())) {
+                            newRrule.append("UNTIL=").append(eventDTO.getEndDate().format(formatter)).append(";");
+                            endDate = eventDTO.getEndDate();
+                        } else {
+                            newRrule.append("UNTIL=").append(endTime.format(formatter)).append(";");
+                            endDate = endTime;
+                        }
+                    } else {
+                        newRrule.append(part).append(";");
+                    }
+                }
+                eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+            } else {
+                for (String part : parts) {
+                    if (part.contains("COUNT")) {
+                        String endTimeString = part.replace("COUNT=", "");
+                        int count = Integer.parseInt(endTimeString);
+                        LocalDateTime endTime = eventDTO.getEndDate().plusDays(count);
+                        endDate = endTime;
+                        if (endTime.isAfter(block.getDateTo())) {
+                            endDate = block.getDateTo();
+                            newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                        } else {
+                            newRrule.append(part).append(";");
+                        }
+
+                    } else {
+                        newRrule.append(part).append(";");
+                    }
+                }
+                eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+            }
+        } else {
+            for (String part : parts) {
+                if (part.contains("UNTIL")) {
+                    String endTimeString = part.replace("UNTIL=", "");
+                    endTimeString = endTimeString.replace("Z", "");
+                    endDate = LocalDateTime.parse(endTimeString, formatter);
+                    if (endDate.isBefore(eventDTO.getEndDate())) {
+                        endDate = eventDTO.getEndDate();
+                    }
+                    newRrule.append("UNTIL=").append(endDate.format(formatter)).append(";");
+                } else if (part.contains("COUNT")) {
+                    String endTimeString = part.replace("COUNT=", "");
+                    int count = Integer.parseInt(endTimeString);
+                    endDate = eventDTO.getEndDate().plusDays(count);
+                } else {
+                    newRrule.append(part).append(";");
+                }
+            }
+            eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
+        }
+        return endDate;
+    }
+
+    private void changeIfBeforeOrAfterBlock(EventDTO eventDTO, Block block) {
+        if (eventDTO.getStartDate().isBefore(block.getDateFrom())) {
+            eventDTO.setStartDate(eventDTO.getStartDate().withYear(block.getDateFrom().getYear()).withMonth(block.getDateFrom().getMonthValue()).withDayOfMonth(block.getDateFrom().getDayOfMonth()));
+            eventDTO.setEndDate(eventDTO.getEndDate().withYear(block.getDateFrom().getYear()).withMonth(block.getDateFrom().getMonthValue()).withDayOfMonth(block.getDateFrom().getDayOfMonth()));
+        } else if (eventDTO.getStartDate().isAfter(block.getDateTo())) {
+            eventDTO.setStartDate(eventDTO.getStartDate().withYear(block.getDateFrom().getYear()).withMonth(block.getDateFrom().getMonthValue()).withDayOfMonth(block.getDateFrom().getDayOfMonth()));
+            eventDTO.setEndDate(eventDTO.getEndDate().withYear(block.getDateFrom().getYear()).withMonth(block.getDateFrom().getMonthValue()).withDayOfMonth(block.getDateFrom().getDayOfMonth()));
+        }
+    }
+
     public boolean checkIfExist(Long id) {
         Optional<Event> oldEvent = this.eventRepository.findById(id);
-        if (oldEvent != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return oldEvent != null;
     }
 
     public void moveEventsToExpiredEventsWhenReachArchiveTime() {
         List<Event> eventList = this.eventRepository.findAllByUser(this.userService.getCurrentUser());
         Settings settings = this.settingsService.getCurrentUserSettings();
         for (Event event : eventList) {
-            if (event.getEndDate().isBefore(LocalDateTime.now().minusDays(settings.getTimeToArchive()))) {
-                this.expiredEventsService.addExpiredEvent(event);
-                this.eventRepository.delete(event);
+            if (event.getDateFromArchiveCount() != null) {
+                if (event.getDateFromArchiveCount().isBefore(LocalDateTime.now().minusDays(settings.getTimeToArchive()))) {
+                    this.expiredEventsService.addExpiredEvent(event);
+                    this.eventRepository.delete(event);
+                }
             }
         }
     }
@@ -73,16 +395,16 @@ public class EventService {
         boolean moved = false;
         if (!oldEvent.getStartDate().isEqual(eventDTO.getStartDate())
                 || !oldEvent.getEndDate().isEqual(eventDTO.getEndDate())
-                || !oldEvent.getAllDay().equals(eventDTO.getAllDay())) {
+                || !oldEvent.getAllDay().equals(eventDTO.getAllDay())
+                || !oldEvent.getRRule().equals(eventDTO.getRRule())) {
             moved = true;
             if (oldEvent.getExDate().equals(eventDTO.getExDate())) {
-                oldEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
-                oldEvent.setStartDate(eventDTO.getStartDate().plusHours(1));
+//                oldEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
+//                oldEvent.setStartDate(eventDTO.getStartDate().plusHours(1));
             }
         }
         if (!oldEvent.getNotes().equals(eventDTO.getNotes())
                 || !oldEvent.getExDate().equals(eventDTO.getExDate())
-                || !oldEvent.getRRule().equals(eventDTO.getRRule())
                 || !oldEvent.getTitle().equals(eventDTO.getTitle())
                 || !oldEvent.getTypeId().equals(eventDTO.getTypeId())) {
             edited = true;
@@ -90,8 +412,10 @@ public class EventService {
 
         if (edited && moved) {
             oldEvent.setStatusId(3);
+            oldEvent.setDateFromArchiveCount(calculateEndDate(eventDTO));
         } else if (!edited && moved) {
             oldEvent.setStatusId(1);
+            oldEvent.setDateFromArchiveCount(calculateEndDate(eventDTO));
         } else {
             oldEvent.setStatusId(2);
         }
@@ -119,6 +443,7 @@ public class EventService {
         }
         return eventDTOArrayList;
     }
+
 
     public List<EventDTO> getCurrentUserEventsByBlock(String blockName) {
         User user = this.userService.getCurrentUser();
