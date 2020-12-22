@@ -53,20 +53,19 @@ public class DatabaseLoader implements CommandLineRunner {
 
         if (this.dataBase.equals("postgres")) {
             this.roleService.addRole("USER");
-            this.roleService.addRole("ADMIN");
 
             User user = new User();
             user.setEmail("admin@o2.pl");
             user.setLogin("admin");
-            user.setPassword(this.passwordEncoder.encode("admin123"));
-            user.setRole(this.roleService.getRoleByName("ADMIN"));
+            user.setPassword(this.passwordEncoder.encode("admin"));
+            user.setRole(this.roleService.getRoleByName("USER"));
 
             Long id = this.userService.addUser(user);
             user = this.userRepository.findById(id).get();
             this.settingsService.createNewSettings(user);
             this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(23).withMinute(59), "Notka"), user);
             this.userService.addUser(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(10).withHour(0), LocalDateTime.now().plusDays(20).withHour(23).withMinute(59), "Druga"), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(11).withHour(0), LocalDateTime.now().plusDays(20).withHour(23).withMinute(59), "Druga"), user);
             Event event = new Event();
             event.setUser(user);
             event.setExDate("");

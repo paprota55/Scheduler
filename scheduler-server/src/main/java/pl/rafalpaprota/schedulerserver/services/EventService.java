@@ -63,7 +63,6 @@ public class EventService {
             Block block = null;
             if (eventDTO.getBlockId() != 0) {
                 block = this.blockService.getBlockBySortedIdFromScheduler(eventDTO.getBlockId());
-                System.out.println(block);
             }
             if (newRrule.contains("FREQ=DAILY")) {
                 endDate = calculateByDaily(eventDTO, block);
@@ -277,8 +276,9 @@ public class EventService {
                     String endTimeString = part.replace("COUNT=", "");
                     int count = Integer.parseInt(endTimeString);
                     endDate = eventDTO.getEndDate().plusDays(count * 7);
+                } else {
+                    newRrule.append(part).append(";");
                 }
-                newRrule.append(part).append(";");
             }
             eventDTO.setRRule(newRrule.substring(0, newRrule.length() - 1));
         }
@@ -393,14 +393,18 @@ public class EventService {
         Event oldEvent = this.eventRepository.findById(eventDTO.getId()).get();
         boolean edited = false;
         boolean moved = false;
+        System.out.println(eventDTO);
         if (!oldEvent.getStartDate().isEqual(eventDTO.getStartDate())
                 || !oldEvent.getEndDate().isEqual(eventDTO.getEndDate())
                 || !oldEvent.getAllDay().equals(eventDTO.getAllDay())
                 || !oldEvent.getRRule().equals(eventDTO.getRRule())) {
             moved = true;
             if (oldEvent.getExDate().equals(eventDTO.getExDate())) {
-//                oldEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
-//                oldEvent.setStartDate(eventDTO.getStartDate().plusHours(1));
+                oldEvent.setEndDate(eventDTO.getEndDate().plusHours(1));
+                oldEvent.setStartDate(eventDTO.getStartDate().plusHours(1));
+            } else {
+                oldEvent.setEndDate(eventDTO.getEndDate());
+                oldEvent.setStartDate(eventDTO.getStartDate());
             }
         }
         if (!oldEvent.getNotes().equals(eventDTO.getNotes())
