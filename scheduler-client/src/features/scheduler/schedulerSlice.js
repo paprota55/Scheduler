@@ -5,6 +5,10 @@ import serverIP from "../../config"
 const API_URL = serverIP;
 const GetEvents = "api/events/getEvents";
 const AddEvent = "api/events/addEvent";
+const GetEventByBlockName = "api/events/getEvents/";
+const ChangeEventByEventId = "api/events/changeEvent/";
+const DeleteEventByEventId = "api/events/deleteEvent/";
+const GetEventByBlock = "api/events/getEvents/block/";
 
 const initialState = {
   events: [],
@@ -48,7 +52,7 @@ export const fetchEvents = (alert) => async (dispatch) => {
 
   export const fetchEventsByBlock = (blockName ,alert) => async (dispatch) => {
     try {
-      const response = await axios.get(API_URL + `api/events/getEvents/block/${blockName}`,{
+      const response = await axios.get(API_URL + GetEventByBlock + `${blockName}`,{
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -63,6 +67,9 @@ export const fetchEvents = (alert) => async (dispatch) => {
 
 
   export const addEvent = (addEvent,blockName, alert) => async (dispatch) => {
+    if(addEvent.blockId === null){
+      addEvent.blockId = 0;
+    }
     try {
       await axios.post(API_URL + AddEvent, addEvent, {
         headers: {
@@ -83,7 +90,7 @@ export const fetchEvents = (alert) => async (dispatch) => {
 
   export const deleteEvent = (eventId,blockName, alert) => async (dispatch) => {
     try {
-      await axios.delete(API_URL + `api/events/deleteEvent/${eventId}`, {
+      await axios.delete(API_URL + DeleteEventByEventId + `${eventId}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -96,8 +103,11 @@ export const fetchEvents = (alert) => async (dispatch) => {
   };
 
   export const changeEvent = (changeEvent,blockName, alert) => async (dispatch) => {
+    if(changeEvent.blockId === null){
+      changeEvent.blockId = 0;
+    }
     try {
-      await axios.put(API_URL + `api/events/changeEvent/${changeEvent.id}`, changeEvent, {
+      await axios.put(API_URL + ChangeEventByEventId + `${changeEvent.id}`, changeEvent, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -119,15 +129,17 @@ export const fetchEvents = (alert) => async (dispatch) => {
 
   export const fetchCurrentData = (blockName, alert) => async (dispatch) => {
       try{
-        const response = await axios.get(API_URL + `api/events/getEvents/${blockName}`, {
+        const response = await axios.get(API_URL + GetEventByBlockName + `${blockName}`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         });
         dispatch(setEvents(response.data));
-        console.log(response.data);
       } catch(error){
-        alert.error("Serwer nie odpowiada.");
+        alert.error("Nie posiadasz już tego bloku. Ładuję wszystkie dane.");
+        dispatch(setBlockNameInSlice("all"));
+        localStorage.setItem("blockInfo", "Aktualnie ładujesz wszystkie swoje wydarzenia.")
+        dispatch(fetchEvents(alert));
       }
   }
 

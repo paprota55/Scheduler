@@ -21,7 +21,7 @@ import {
 } from "@devexpress/dx-react-scheduler-material-ui";
 
 
-import { types } from "../schedulerCommons/Types";
+import { types, newAppointmentStartId } from "../schedulerCommons/Types";
 import { status } from "../schedulerCommons/Status";
 import {
   editRecurrenceMessages,
@@ -60,7 +60,7 @@ export default class Calendar extends React.PureComponent {
         },
         {
           fieldName: "blockId",
-          title: "Wybierz gdzie utworzyć wydarzenie",
+          title: "Wybierz gdzie ma występować wydarzenie",
           instances: this.props.blocksList,
           allowMultiple: false,
         },
@@ -79,7 +79,6 @@ export default class Calendar extends React.PureComponent {
       appointmentChanges: {},
       editingAppointment: undefined,
     };
-    console.log(this.props.blocksList);
     this.currentDateChange = (currentDate) => {
       this.setState({ currentDate });
     };
@@ -102,6 +101,10 @@ export default class Calendar extends React.PureComponent {
   }
 
   commitChanges({ added, changed, deleted }) {
+    this.setState((state) => {
+
+    });
+
     if (added) {
       if(added.title === undefined){
         added.title = 'Nowy';
@@ -110,8 +113,9 @@ export default class Calendar extends React.PureComponent {
         allDay: false,
         notes: '',
         rRule: '',
-        typeId: 12,
+        typeId: newAppointmentStartId,
         exDate: '',
+        blockId: 0,
         ...added,
         statusId: 0,
       });
@@ -120,7 +124,7 @@ export default class Calendar extends React.PureComponent {
       this.props.events.map((appointment) =>
         changed[appointment.id]
           ? this.props.changeOldEvent({
-              ...appointment,
+              ...appointment, 
               ...changed[appointment.id],
             })
           : null
@@ -149,7 +153,7 @@ export default class Calendar extends React.PureComponent {
           locale={locale}
         >
           <ViewState
-            currentDate={currentDate}
+            defaultCurrentDate={currentDate}
             onCurrentDateChange={this.currentDateChange}
             defaultCurrentViewName="week"
           />

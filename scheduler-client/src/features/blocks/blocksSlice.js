@@ -7,6 +7,7 @@ const GetBlocks = "api/blocks/getBlocks";
 const GetSchedulerBlocksList = "api/blocks/getBlocksToScheduler";
 const UpdateBlock = "api/blocks/modifyBlock";
 const AddBlock ="api/blocks/addBlock";
+const DeleteBlock = "api/blocks/deleteBlock/";
 
 const initialState = {
   blocks: [],
@@ -43,9 +44,7 @@ export const fetchSchedulerBlocksList = () => async (dispatch) => {
       },
     });
     dispatch(setSchedulerBlocksList(response.data));
-    console.log(response.data);
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -58,19 +57,19 @@ export const fetchBlocks = () => async (dispatch) => {
     });
     dispatch(setBlocks(response.data));
   } catch (error) {
-    console.log(error);
   }
 };
 
 export const deleteBlock = (blockName, alert) => async (dispatch) => {
   try {
-    await axios.delete(API_URL + `api/blocks/deleteBlock/${blockName}`, {
+    await axios.delete(API_URL + DeleteBlock + `${blockName}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     });
     dispatch(fetchBlocks());
     dispatch(fetchSchedulerBlocksList());
+    if(localStorage.getItem(""))
     alert.success("Operacja przebiegła pomyślnie.");
   } catch (error) {
     alert.error("Serwer nie odpowiada.");
@@ -78,7 +77,6 @@ export const deleteBlock = (blockName, alert) => async (dispatch) => {
 };
 
 export const updateBlock = (editBlock, alert) => async (dispatch) => {
-  console.log(editBlock);
   try {
     await axios.put(API_URL + UpdateBlock, editBlock, {
       headers: {

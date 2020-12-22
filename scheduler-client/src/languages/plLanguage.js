@@ -104,7 +104,7 @@ export const blockPageMessages = {
 export const editRecurrenceMessages = {
   pl: {
     current: "Wybrana data",
-    currentAndFollowing: "[BETA]Wybrana oraz następujące",
+    currentAndFollowing: "[BETA] Wybrane i podążające",
     all: "Całe wydarzenie",
     menuEditingTitle: "Edycja wydarzenia",
     menuDeletingTitle: "Usuń powtarzające wydarzenie",
@@ -130,9 +130,9 @@ export const appointmentFormMessages = {
     repeatEveryLabel: "Powtarzaj co",
     daysLabel: "dni",
     endRepeatLabel: "Koniec powtarzania: ",
-    onLabel: "Przez",
+    onLabel: "Po",
     afterLabel: "W dniu",
-    occurrencesLabel: "powtórzeń",
+    occurrencesLabel: "powtórzeniach",
     weeksOnLabel: "",
     monthsLabel: "",
     ofEveryMonthLabel: "dniu miesiąca",

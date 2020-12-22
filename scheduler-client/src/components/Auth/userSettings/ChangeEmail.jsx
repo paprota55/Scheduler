@@ -67,7 +67,7 @@ const ChangeEmail = () => {
         alignItems="center"
       >
         <Typography className={classes.title} variant="h1">
-          {userSettingsPageMessages.changeButtonLabel}
+          {userSettingsPageMessages.changeEmailHeaderLabel}
         </Typography>
         <TextValidator
           onChange={(event) => dispatch(setNewEmail(event.target.value))}

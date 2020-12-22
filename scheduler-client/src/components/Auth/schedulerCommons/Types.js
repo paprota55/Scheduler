@@ -1,4 +1,4 @@
-import { teal, indigo, green, cyan, blue, yellow, orange, red, lime, pink, amber, deepPurple } from "@material-ui/core/colors/";
+import { teal, indigo, green, cyan, blue, yellow, orange, red, lime, pink, amber, deepPurple, brown } from "@material-ui/core/colors/";
 
 export const types = [
   {
@@ -57,8 +57,15 @@ export const types = [
     color: deepPurple,
   },
   {
-    text: "Inne",
+    text: "Godziny dziekańskie",
     id: 12,
+    color: brown,
+  },
+  {
+    text: "Inne",
+    id: 13,
     color: lime,
   },
 ];
+
+export const newAppointmentStartId = 13;
