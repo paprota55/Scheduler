@@ -15,6 +15,7 @@ import pl.rafalpaprota.schedulerserver.repositories.UserRepository;
 import pl.rafalpaprota.schedulerserver.services.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Component
@@ -53,19 +54,20 @@ public class DatabaseLoader implements CommandLineRunner {
 
         if (this.dataBase.equals("postgres")) {
             this.roleService.addRole("USER");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
 
             User user = new User();
             user.setEmail("admin@o2.pl");
-            user.setLogin("admin");
-            user.setPassword(this.passwordEncoder.encode("admin"));
+            user.setLogin("test");
+            user.setPassword(this.passwordEncoder.encode("test"));
             user.setRole(this.roleService.getRoleByName("USER"));
 
             Long id = this.userService.addUser(user);
             user = this.userRepository.findById(id).get();
             this.settingsService.createNewSettings(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.now().withHour(0), LocalDateTime.now().plusDays(10).withHour(23).withMinute(59), "Notka"), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok1", LocalDateTime.parse("20201222T000000", formatter), LocalDateTime.parse("20210101T235959", formatter), "Notka"), user);
             this.userService.addUser(user);
-            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.now().plusDays(11).withHour(0), LocalDateTime.now().plusDays(20).withHour(23).withMinute(59), "Druga"), user);
+            this.blockService.addBlockToDB(new BlockDTO("blok2", LocalDateTime.parse("20210102T000000", formatter), LocalDateTime.parse("20210111T235959", formatter), "Druga"), user);
             Event event = new Event();
             event.setUser(user);
             event.setExDate("");

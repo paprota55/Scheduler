@@ -40,8 +40,8 @@ public class BlockService {
 
     public void modifyBlockInDB(BlockDTO blockDTO, User user) {
         Block block = this.blockRepository.findByBlockNameAndUser(blockDTO.getBlockName(), user);
-        block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0));
-        block.setDateTo(blockDTO.getDateTo().withHour(0).withMinute(0));
+        block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0).withSecond(0).withNano(0));
+        block.setDateTo(blockDTO.getDateTo().withHour(23).withMinute(59).withSecond(59).withNano(999));
         block.setNotes(blockDTO.getNotes());
         this.blockRepository.save(block);
     }
@@ -53,8 +53,8 @@ public class BlockService {
     public Long addBlockToDB(BlockDTO blockDTO, User user) {
         Block block = new Block();
         block.setBlockName(blockDTO.getBlockName());
-        block.setDateTo(blockDTO.getDateTo());
-        block.setDateFrom(blockDTO.getDateFrom());
+        block.setDateTo(blockDTO.getDateTo().withHour(23).withMinute(59).withSecond(59).withNano(999));
+        block.setDateFrom(blockDTO.getDateFrom().withHour(0).withMinute(0).withSecond(0).withNano(0));
         block.setNotes(blockDTO.getNotes());
         block.setUser(user);
 

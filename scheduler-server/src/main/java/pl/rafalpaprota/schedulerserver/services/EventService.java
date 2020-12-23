@@ -37,14 +37,22 @@ public class EventService {
         eventDTO.setStartDate(eventDTO.getStartDate().plusHours(1));
         eventDTO.setEndDate(eventDTO.getEndDate().plusHours(1));
         newEvent.setDateFromArchiveCount(calculateEndDate(eventDTO));
-        newEvent.setId(eventDTO.getId());
-        newEvent.setAllDay(eventDTO.getAllDay());
+        newEvent.setId(null);
+        if (eventDTO.getAllDay() != null) {
+            newEvent.setAllDay(eventDTO.getAllDay());
+        } else {
+            newEvent.setAllDay(false);
+        }
         newEvent.setEndDate(eventDTO.getEndDate());
         newEvent.setStartDate(eventDTO.getStartDate());
         newEvent.setTitle(eventDTO.getTitle());
         newEvent.setNotes(eventDTO.getNotes());
-        newEvent.setTypeId(eventDTO.getTypeId());
-        newEvent.setStatusId(eventDTO.getStatusId());
+        if (eventDTO.getTypeId() != null) {
+            newEvent.setTypeId(eventDTO.getTypeId());
+        } else {
+            newEvent.setTypeId(0);
+        }
+        newEvent.setStatusId(0);
         newEvent.setRRule(eventDTO.getRRule());
         newEvent.setExDate(eventDTO.getExDate());
         newEvent.setUser(this.userService.getCurrentUser());
@@ -276,6 +284,7 @@ public class EventService {
                     String endTimeString = part.replace("COUNT=", "");
                     int count = Integer.parseInt(endTimeString);
                     endDate = eventDTO.getEndDate().plusDays(count * 7);
+                    newRrule.append("UNTIL=").append(endDate).append(";");
                 } else {
                     newRrule.append(part).append(";");
                 }

@@ -26,10 +26,14 @@ public class EventsController {
     @RequestMapping(method = RequestMethod.POST, value = "api/events/addEvent")
     public ResponseEntity<?> addEvent(@RequestBody EventDTO eventDTO) {
         System.out.println(eventDTO);
-        if (eventDTO.getStartDate().isBefore(eventDTO.getEndDate())) {
-            return ResponseEntity.ok(this.eventService.addNewEvent(eventDTO));
+        if (eventDTO.getStartDate() != null && eventDTO.getEndDate() != null) {
+            if (eventDTO.getStartDate().isBefore(eventDTO.getEndDate())) {
+                return ResponseEntity.ok(this.eventService.addNewEvent(eventDTO));
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Złe daty");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong dates");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano dat lub daty");
         }
     }
 
@@ -72,7 +76,7 @@ public class EventsController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "api/events/deleteEvent/{eventId}")
-    public ResponseEntity<?> deleteUserBlock(@PathVariable final Long eventId) {
+    public ResponseEntity<?> deleteUserEvent(@PathVariable final Long eventId) {
         if (eventId != null) {
             if (this.eventService.checkIfEventIsThisUser(eventId)) {
                 this.eventService.deleteEvent(eventId);
